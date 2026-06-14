@@ -1,8 +1,10 @@
+
 import * as React from 'react';
 import type {Metadata} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from "@/components/ui/toaster";
+import { InstallPwaPrompt } from '@/components/install-pwa-prompt';
 
 export const metadata: Metadata = {
   title: 'Controle de Donativos',
@@ -33,6 +35,7 @@ export default async function RootLayout({
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
           {children}
+          <InstallPwaPrompt />
           <Toaster />
         </FirebaseClientProvider>
       </body>
