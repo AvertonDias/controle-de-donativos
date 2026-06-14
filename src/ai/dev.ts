@@ -1,4 +1,3 @@
-import { config } from 'dotenv';
-config();
 
-import '@/ai/flows/smart-projection-tool-flow.ts';
+// Arquivo desativado conforme solicitação do usuário.
+export {};

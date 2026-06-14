@@ -42,7 +42,6 @@ export function MonthlyAudit({ entries, selectedMonth, onAddJustification }: Mon
   const monthStart = startOfMonth(selectedMonth);
   const monthEnd = endOfMonth(selectedMonth);
 
-  // Encontra todas as quintas e sábados do mês
   const expectedDates = eachDayOfInterval({ start: monthStart, end: monthEnd })
     .filter(date => isThursday(date) || isSaturday(date));
 
