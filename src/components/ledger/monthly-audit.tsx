@@ -14,7 +14,7 @@ import {
   parseISO
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { AlertCircle, CheckCircle2, CalendarDays } from 'lucide-react';
+import { AlertCircle, CheckCircle2, CalendarDays, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
@@ -35,6 +35,8 @@ export function MonthlyAudit({ entries, selectedMonth }: MonthlyAuditProps) {
     return !entries.find(entry => isSameDay(parseISO(entry.date), expectedDate));
   });
 
+  const entriesWithObservations = entries.filter(e => e.observations && e.observations.trim() !== '');
+
   const allRecorded = missingDates.length === 0;
 
   return (
@@ -45,7 +47,7 @@ export function MonthlyAudit({ entries, selectedMonth }: MonthlyAuditProps) {
           Conferência de Registros (Quintas e Sábados)
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-6">
         {allRecorded ? (
           <div className="flex items-center gap-3 text-green-600 bg-green-50 p-3 rounded-lg border border-green-100">
             <CheckCircle2 className="h-5 w-5 shrink-0" />
@@ -58,7 +60,7 @@ export function MonthlyAudit({ entries, selectedMonth }: MonthlyAuditProps) {
               <div>
                 <p className="text-sm font-bold">Existem dias de reunião sem lançamentos:</p>
                 <p className="text-xs opacity-80 mt-1">
-                  Verifique se houve donativos nestas datas para garantir que o fechamento esteja correto.
+                  Verifique se houve donativos nestas datas ou se foram justificados em outras notas.
                 </p>
               </div>
             </div>
@@ -68,6 +70,27 @@ export function MonthlyAudit({ entries, selectedMonth }: MonthlyAuditProps) {
                 <Badge key={idx} variant="outline" className="bg-white hover:bg-white text-amber-700 border-amber-200 capitalize py-1 px-2">
                   {format(date, "dd/MM eeee", { locale: ptBR })}
                 </Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {entriesWithObservations.length > 0 && (
+          <div className="pt-4 border-t">
+            <h4 className="text-sm font-bold flex items-center gap-2 mb-3 text-primary">
+              <MessageSquare className="h-4 w-4" />
+              Notas de Justificativa do Mês
+            </h4>
+            <div className="grid gap-2">
+              {entriesWithObservations.map((entry) => (
+                <div key={entry.id} className="text-xs bg-muted/50 p-2 rounded-md border border-border/50">
+                  <span className="font-bold mr-2 text-accent">
+                    {format(parseISO(entry.date), "dd/MM")}:
+                  </span>
+                  <span className="text-muted-foreground italic">
+                    "{entry.observations}"
+                  </span>
+                </div>
               ))}
             </div>
           </div>
