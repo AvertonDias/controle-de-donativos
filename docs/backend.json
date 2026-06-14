@@ -1,4 +1,3 @@
-
 {
   "entities": {
     "DonationEntry": {
@@ -22,6 +21,10 @@
         "dailySum": {
           "type": "number",
           "description": "Soma total do dia"
+        },
+        "observations": {
+          "type": "string",
+          "description": "Observações ou justificativas para o registro"
         },
         "createdAt": {
           "type": "string",

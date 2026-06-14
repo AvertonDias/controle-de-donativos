@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo } from 'react';
@@ -13,10 +12,15 @@ import {
 import { LedgerEntry } from "@/lib/ledger-store";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditEntryModal } from "./edit-entry-modal";
-import { cn } from '@/lib/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface LedgerTableProps {
   entries: LedgerEntry[];
@@ -52,8 +56,8 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
     let sortableItems = [...entries];
     if (sortConfig !== null) {
       sortableItems.sort((a, b) => {
-        const aValue = a[sortConfig.key];
-        const bValue = b[sortConfig.key];
+        const aValue = (a[sortConfig.key] as any) || '';
+        const bValue = (b[sortConfig.key] as any) || '';
 
         if (aValue < bValue) {
           return sortConfig.direction === 'asc' ? -1 : 1;
@@ -135,7 +139,14 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
           {sortedEntries.map((entry) => (
             <TableRow key={entry.id} className="animate-slide-up hover:bg-muted/30 transition-colors">
               <TableCell className="font-medium whitespace-nowrap capitalize">
-                {format(parseISO(entry.date), "dd/MM eeee", { locale: ptBR })}
+                <div className="flex flex-col">
+                  <span>{format(parseISO(entry.date), "dd/MM eeee", { locale: ptBR })}</span>
+                  {entry.observations && (
+                    <span className="text-[10px] text-muted-foreground font-normal italic line-clamp-1 max-w-[150px]">
+                      {entry.observations}
+                    </span>
+                  )}
+                </div>
               </TableCell>
               <TableCell>{formatCurrency(entry.worldwideWork)}</TableCell>
               <TableCell>{formatCurrency(entry.congregation)}</TableCell>
@@ -143,7 +154,21 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
                 {formatCurrency(entry.dailySum)}
               </TableCell>
               <TableCell>
-                <div className="flex items-center justify-center gap-2">
+                <div className="flex items-center justify-center gap-1">
+                  {entry.observations && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8 text-primary/60">
+                            <Info className="h-4 w-4" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="max-w-[200px] text-xs">{entry.observations}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
                   <Button
                     variant="ghost"
                     size="icon"

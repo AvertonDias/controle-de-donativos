@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from 'react';
@@ -13,10 +12,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Plus } from "lucide-react";
 
 interface AddEntryModalProps {
-  onAdd: (entry: { date: string; worldwideWork: number; congregation: number }) => void;
+  onAdd: (entry: { date: string; worldwideWork: number; congregation: number; observations: string }) => void;
 }
 
 export function AddEntryModal({ onAdd }: AddEntryModalProps) {
@@ -25,6 +25,7 @@ export function AddEntryModal({ onAdd }: AddEntryModalProps) {
     date: new Date().toISOString().split('T')[0],
     worldwideWork: '',
     congregation: '',
+    observations: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -33,11 +34,13 @@ export function AddEntryModal({ onAdd }: AddEntryModalProps) {
       date: formData.date,
       worldwideWork: parseFloat(formData.worldwideWork) || 0,
       congregation: parseFloat(formData.congregation) || 0,
+      observations: formData.observations,
     });
     setFormData({
       date: new Date().toISOString().split('T')[0],
       worldwideWork: '',
       congregation: '',
+      observations: '',
     });
     setOpen(false);
   };
@@ -65,26 +68,38 @@ export function AddEntryModal({ onAdd }: AddEntryModalProps) {
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="worldwide" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Obra Mundial (OMTJ)</Label>
-              <Input
-                id="worldwide"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.worldwideWork}
-                onChange={(e) => setFormData({ ...formData, worldwideWork: e.target.value })}
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="worldwide" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Obra Mundial</Label>
+                <Input
+                  id="worldwide"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={formData.worldwideWork}
+                  onChange={(e) => setFormData({ ...formData, worldwideWork: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="congregation" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Congregação</Label>
+                <Input
+                  id="congregation"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={formData.congregation}
+                  onChange={(e) => setFormData({ ...formData, congregation: e.target.value })}
+                />
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="congregation" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Congregação</Label>
-              <Input
-                id="congregation"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.congregation}
-                onChange={(e) => setFormData({ ...formData, congregation: e.target.value })}
+              <Label htmlFor="observations" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Observações</Label>
+              <Textarea
+                id="observations"
+                placeholder="Ex: Refere-se à reunião de quinta-feira passada"
+                value={formData.observations}
+                onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
+                className="resize-none"
               />
             </div>
           </div>

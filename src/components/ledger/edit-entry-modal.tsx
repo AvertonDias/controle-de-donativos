@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -12,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { LedgerEntry } from '@/lib/ledger-store';
 
 interface EditEntryModalProps {
@@ -25,6 +25,7 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
     date: '',
     worldwideWork: '',
     congregation: '',
+    observations: '',
   });
 
   useEffect(() => {
@@ -33,6 +34,7 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
         date: entry.date,
         worldwideWork: entry.worldwideWork.toString(),
         congregation: entry.congregation.toString(),
+        observations: entry.observations || '',
       });
     }
   }, [entry]);
@@ -45,6 +47,7 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
       date: formData.date,
       worldwideWork: parseFloat(formData.worldwideWork) || 0,
       congregation: parseFloat(formData.congregation) || 0,
+      observations: formData.observations,
     });
     onClose();
   };
@@ -67,26 +70,38 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
                 required
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-worldwide" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Obra Mundial (OMTJ)</Label>
-              <Input
-                id="edit-worldwide"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.worldwideWork}
-                onChange={(e) => setFormData({ ...formData, worldwideWork: e.target.value })}
-              />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="edit-worldwide" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Obra Mundial</Label>
+                <Input
+                  id="edit-worldwide"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={formData.worldwideWork}
+                  onChange={(e) => setFormData({ ...formData, worldwideWork: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-congregation" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Congregação</Label>
+                <Input
+                  id="edit-congregation"
+                  type="number"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={formData.congregation}
+                  onChange={(e) => setFormData({ ...formData, congregation: e.target.value })}
+                />
+              </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="edit-congregation" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Congregação</Label>
-              <Input
-                id="edit-congregation"
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                value={formData.congregation}
-                onChange={(e) => setFormData({ ...formData, congregation: e.target.value })}
+              <Label htmlFor="edit-observations" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Observações</Label>
+              <Textarea
+                id="edit-observations"
+                placeholder="Notas sobre este registro"
+                value={formData.observations}
+                onChange={(e) => setFormData({ ...formData, observations: e.target.value })}
+                className="resize-none"
               />
             </div>
           </div>

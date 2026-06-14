@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMemo } from 'react';
@@ -13,19 +12,18 @@ export interface LedgerEntry {
   worldwideWork: number;
   congregation: number;
   dailySum: number;
+  observations?: string;
   createdAt?: any;
 }
 
 export function useLedger(selectedDate: Date) {
   const firestore = useFirestore();
 
-  // Deriva o caminho do ano e mês a partir da data selecionada
   const year = selectedDate.getFullYear().toString();
   const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
 
   const donationsQuery = useMemo(() => {
     if (!firestore) return null;
-    // Nova estrutura: donations/{year}/months/{month}/entries
     return query(
       collection(firestore, 'donations', year, 'months', month, 'entries'), 
       orderBy('date', 'desc')
@@ -38,7 +36,7 @@ export function useLedger(selectedDate: Date) {
     if (!firestore) return;
 
     const [eYear, eMonth] = entry.date.split('-');
-    const dailySum = entry.worldwideWork + entry.congregation;
+    const dailySum = (entry.worldwideWork || 0) + (entry.congregation || 0);
     const donationData = {
       ...entry,
       dailySum,
@@ -64,13 +62,12 @@ export function useLedger(selectedDate: Date) {
     const [oldYear, oldMonth] = originalDate.split('-');
     const [newYear, newMonth] = entry.date.split('-');
     
-    const dailySum = entry.worldwideWork + entry.congregation;
+    const dailySum = (entry.worldwideWork || 0) + (entry.congregation || 0);
     const donationData = {
       ...entry,
       dailySum,
     };
 
-    // Se a data mudou de mês/ano, precisamos deletar do antigo e criar no novo
     if (oldYear !== newYear || oldMonth !== newMonth) {
       deleteEntry(id, originalDate);
       addEntry(entry);
