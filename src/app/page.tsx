@@ -5,7 +5,6 @@ import { useLedger } from "@/lib/ledger-store";
 import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
-import { ProjectionTool } from "@/components/ledger/projection-tool";
 import { BookOpen } from "lucide-react";
 
 export default function Home() {
@@ -48,10 +47,6 @@ export default function Home() {
             </div>
           </div>
           <LedgerTable entries={entries} onDelete={deleteEntry} />
-        </section>
-
-        <section>
-          <ProjectionTool entries={entries} />
         </section>
       </main>
 
