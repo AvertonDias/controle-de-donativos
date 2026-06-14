@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "DonationEntry": {
@@ -42,7 +43,8 @@
   },
   "auth": {
     "providers": [
-      "google.com"
+      "google.com",
+      "password"
     ]
   },
   "firestore": {

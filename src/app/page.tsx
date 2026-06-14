@@ -2,28 +2,40 @@
 "use client";
 
 import * as React from "react";
+import { useRouter } from "next/navigation";
+import { signOut } from "firebase/auth";
+import { useAuth, useUser } from "@/firebase";
 import { useLedger } from "@/lib/ledger-store";
 import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
 import { MonthlyAudit } from "@/components/ledger/monthly-audit";
-import { BookOpen } from "lucide-react";
+import { BookOpen, LogOut, User as UserIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-export default function Home({
-  params: paramsPromise,
-  searchParams: searchParamsPromise,
-}: {
-  params: Promise<any>;
-  searchParams: Promise<any>;
-}) {
-  // Next.js 15: Consumindo params e searchParams com React.use()
-  React.use(paramsPromise);
-  React.use(searchParamsPromise);
-
+export default function Home() {
+  const router = useRouter();
+  const auth = useAuth();
+  const { user, loading: userLoading } = useUser();
   const [selectedMonth, setSelectedMonth] = React.useState(new Date());
   
   const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger(selectedMonth);
+
+  React.useEffect(() => {
+    if (!userLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, userLoading, router]);
 
   const filteredTotals = React.useMemo(() => {
     return entries.reduce(
@@ -36,9 +48,22 @@ export default function Home({
     );
   }, [entries]);
 
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push("/login");
+  };
+
+  if (userLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="animate-pulse text-primary font-headline text-xl">carregando</div>
+      </div>
+    );
+  }
+
   if (!isLoaded) return (
     <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="animate-pulse text-primary font-headline text-xl">carregando</div>
+      <div className="animate-pulse text-primary font-headline text-xl">carregando dados</div>
     </div>
   );
 
@@ -54,8 +79,37 @@ export default function Home({
               Controle de Donativos
             </h1>
           </div>
-          <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest hidden md:block">
-            Livro de Registro Financeiro
+          
+          <div className="flex items-center gap-4">
+            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest hidden md:block">
+              Livro de Registro Financeiro
+            </div>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-primary/10">
+                  <Avatar className="h-10 w-10">
+                    <AvatarImage src={user.photoURL || ""} alt={user.displayName || ""} />
+                    <AvatarFallback className="bg-primary/5 text-primary font-bold">
+                      {user.displayName?.charAt(0) || user.email?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-56" align="end" forceMount>
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-bold leading-none text-primary">{user.displayName || "Administrador"}</p>
+                    <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive cursor-pointer font-semibold">
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Sair do sistema</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
