@@ -8,7 +8,8 @@ import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
 import { MonthlyAudit } from "@/components/ledger/monthly-audit";
-import { BookOpen } from "lucide-react";
+import { BookOpen, ListFilter, ClipboardCheck } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export default function Home({
   params: paramsPromise,
@@ -69,23 +70,44 @@ export default function Home({
           <SummaryCards totals={filteredTotals} />
         </section>
 
-        <section>
-          <MonthlyAudit entries={entries} selectedMonth={selectedMonth} />
-        </section>
+        <Tabs defaultValue="entries" className="w-full mt-4">
+          <TabsList className="grid w-full grid-cols-2 mb-8 bg-muted/50 p-1">
+            <TabsTrigger value="entries" className="flex items-center gap-2 py-2">
+              <ListFilter className="h-4 w-4" />
+              Lançamentos
+            </TabsTrigger>
+            <TabsTrigger value="audit" className="flex items-center gap-2 py-2">
+              <ClipboardCheck className="h-4 w-4" />
+              Conferência
+            </TabsTrigger>
+          </TabsList>
 
-        <section className="mb-12">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-            <div>
-              <h2 className="text-2xl font-headline font-bold text-accent">Lançamentos do Mês</h2>
-              <p className="text-muted-foreground text-sm">Gestão consolidada das contribuições locais e mundiais</p>
-            </div>
-          </div>
-          <LedgerTable 
-            entries={entries} 
-            onDelete={deleteEntry} 
-            onUpdate={updateEntry}
-          />
-        </section>
+          <TabsContent value="entries" className="animate-slide-up focus-visible:outline-none">
+            <section className="mb-12">
+              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+                <div>
+                  <h2 className="text-2xl font-headline font-bold text-accent">Lançamentos do Mês</h2>
+                  <p className="text-muted-foreground text-sm">Gestão consolidada das contribuições locais e mundiais</p>
+                </div>
+              </div>
+              <LedgerTable 
+                entries={entries} 
+                onDelete={deleteEntry} 
+                onUpdate={updateEntry}
+              />
+            </section>
+          </TabsContent>
+
+          <TabsContent value="audit" className="animate-slide-up focus-visible:outline-none">
+            <section className="mb-12">
+              <div className="mb-6">
+                <h2 className="text-2xl font-headline font-bold text-accent">Auditoria Mensal</h2>
+                <p className="text-muted-foreground text-sm">Verificação de registros automáticos para dias de reunião</p>
+              </div>
+              <MonthlyAudit entries={entries} selectedMonth={selectedMonth} />
+            </section>
+          </TabsContent>
+        </Tabs>
       </main>
 
       <AddEntryModal onAdd={addEntry} />
