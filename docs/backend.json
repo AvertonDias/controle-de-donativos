@@ -39,6 +39,20 @@
         "congregation",
         "dailySum"
       ]
+    },
+    "UserSettings": {
+      "title": "Configurações do Usuário",
+      "description": "Configurações personalizadas do sistema para o usuário.",
+      "type": "object",
+      "properties": {
+        "meetingDays": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Dias da semana com reunião (0=Domingo, 1=Segunda, etc.)"
+        }
+      }
     }
   },
   "auth": {
@@ -51,6 +65,10 @@
     "/users/{userId}/donations/{yearId}/months/{monthId}/entries/{donationId}": {
       "schema": "DonationEntry",
       "description": "Registros de donativos exclusivos e privados de cada usuário."
+    },
+    "/users/{userId}/settings/general": {
+      "schema": "UserSettings",
+      "description": "Configurações gerais do usuário."
     }
   }
 }

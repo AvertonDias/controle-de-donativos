@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { signOut } from "firebase/auth";
 import { useAuth, useUser } from "@/firebase";
 import { useLedger } from "@/lib/ledger-store";
+import { useUserSettings } from "@/lib/settings-store";
 import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
 import { MonthlyAudit } from "@/components/ledger/monthly-audit";
-import { BookOpen, LogOut, User as UserIcon } from "lucide-react";
+import { BookOpen, LogOut, User as UserIcon, Settings, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -29,8 +30,8 @@ export default function Home() {
   const { user, loading: userLoading } = useUser();
   const [selectedMonth, setSelectedMonth] = React.useState(new Date());
   
-  // Passamos o user?.uid para o hook para isolar os dados por usuário
   const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger(selectedMonth, user?.uid);
+  const { settings } = useUserSettings(user?.uid);
 
   React.useEffect(() => {
     if (!userLoading && !user) {
@@ -82,10 +83,6 @@ export default function Home() {
           </div>
           
           <div className="flex items-center gap-4">
-            <div className="text-[10px] font-semibold text-muted-foreground uppercase tracking-widest hidden md:block">
-              Livro de Registro Financeiro
-            </div>
-            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="relative h-10 w-10 rounded-full p-0 border border-primary/10">
@@ -104,6 +101,15 @@ export default function Home() {
                     <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
                   </div>
                 </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => router.push("/annual")} className="cursor-pointer">
+                  <TrendingUp className="mr-2 h-4 w-4" />
+                  <span>Resumo Anual</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/settings")} className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Configurações</span>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive cursor-pointer font-semibold">
                   <LogOut className="mr-2 h-4 w-4" />
@@ -142,11 +148,12 @@ export default function Home() {
             <div className="pt-8 border-t border-dashed">
               <div className="mb-6">
                 <h2 className="text-xl font-headline font-bold text-accent">Conferência de Período</h2>
-                <p className="text-muted-foreground text-sm">Verificação automática de registros para dias de reunião</p>
+                <p className="text-muted-foreground text-sm">Verificação automática de registros baseada nas suas configurações</p>
               </div>
               <MonthlyAudit 
                 entries={entries} 
                 selectedMonth={selectedMonth} 
+                meetingDays={settings.meetingDays}
                 onAddJustification={addEntry} 
               />
             </div>

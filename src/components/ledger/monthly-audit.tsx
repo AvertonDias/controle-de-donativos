@@ -7,11 +7,10 @@ import {
   startOfMonth, 
   endOfMonth, 
   eachDayOfInterval, 
-  isThursday, 
-  isSaturday, 
   format,
   isSameDay,
-  parseISO
+  parseISO,
+  getDay
 } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { AlertCircle, CheckCircle2, CalendarDays, MessageSquare, PlusCircle } from 'lucide-react';
@@ -32,18 +31,20 @@ import { Textarea } from "@/components/ui/textarea";
 interface MonthlyAuditProps {
   entries: LedgerEntry[];
   selectedMonth: Date;
+  meetingDays: number[];
   onAddJustification: (entry: { date: string; worldwideWork: number; congregation: number; observations: string }) => void;
 }
 
-export function MonthlyAudit({ entries, selectedMonth, onAddJustification }: MonthlyAuditProps) {
+export function MonthlyAudit({ entries, selectedMonth, meetingDays, onAddJustification }: MonthlyAuditProps) {
   const [justifyingDate, setJustifyingDate] = useState<Date | null>(null);
   const [reason, setReason] = useState("");
 
   const monthStart = startOfMonth(selectedMonth);
   const monthEnd = endOfMonth(selectedMonth);
 
+  // Filtramos os dias do mês baseados nos dias de reunião configurados
   const expectedDates = eachDayOfInterval({ start: monthStart, end: monthEnd })
-    .filter(date => isThursday(date) || isSaturday(date));
+    .filter(date => meetingDays.includes(getDay(date)));
 
   const missingDates = expectedDates.filter(expectedDate => {
     return !entries.find(entry => isSameDay(parseISO(entry.date), expectedDate));
@@ -66,20 +67,29 @@ export function MonthlyAudit({ entries, selectedMonth, onAddJustification }: Mon
     }
   };
 
+  const getDayNames = () => {
+    const names = [
+      "Domingos", "Segundas", "Terças", "Quartas", "Quintas", "Sextas", "Sábados"
+    ];
+    return meetingDays.map(d => names[d]).join(" e ");
+  };
+
   return (
     <>
       <Card className={`mb-8 border-l-4 ${allRecorded ? 'border-l-green-500' : 'border-l-amber-500'}`}>
         <CardHeader className="pb-2">
           <CardTitle className="text-lg font-headline flex items-center gap-2">
             <CalendarDays className="h-5 w-5 text-muted-foreground" />
-            Conferência de Registros (Quintas e Sábados)
+            Conferência de Registros ({meetingDays.length > 0 ? getDayNames() : "Nenhum dia configurado"})
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          {allRecorded ? (
+          {meetingDays.length === 0 ? (
+            <p className="text-sm text-muted-foreground italic">Vá em configurações para definir os dias de reunião.</p>
+          ) : allRecorded ? (
             <div className="flex items-center gap-3 text-green-600 bg-green-50 p-3 rounded-lg border border-green-100">
               <CheckCircle2 className="h-5 w-5 shrink-0" />
-              <p className="text-sm font-medium">Todos os dias de reunião deste mês possuem um registro de donativo.</p>
+              <p className="text-sm font-medium">Todos os dias esperados deste mês possuem um registro.</p>
             </div>
           ) : (
             <div className="space-y-4">
@@ -88,7 +98,7 @@ export function MonthlyAudit({ entries, selectedMonth, onAddJustification }: Mon
                 <div>
                   <p className="text-sm font-bold">Existem dias de reunião sem lançamentos:</p>
                   <p className="text-xs opacity-80 mt-1">
-                    Clique na data para adicionar uma justificativa (ex: congresso, sem reunião).
+                    Clique na data para adicionar uma justificativa ou lançamento.
                   </p>
                 </div>
               </div>
