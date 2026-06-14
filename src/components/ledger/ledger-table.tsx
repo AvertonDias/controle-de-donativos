@@ -1,4 +1,3 @@
-
 "use client";
 
 import {
@@ -31,8 +30,8 @@ export function LedgerTable({ entries, onDelete }: LedgerTableProps) {
   if (entries.length === 0) {
     return (
       <div className="p-12 text-center bg-card rounded-lg border border-dashed border-muted-foreground/30 text-muted-foreground">
-        <p className="font-headline text-xl">Nenhum registro encontrado</p>
-        <p className="text-sm">Comece adicionando uma contribuição usando o botão abaixo.</p>
+        <p className="font-headline text-xl">ainda não está salvando no bd</p>
+        <p className="text-sm">Verifique se o Firestore está ativo e as regras de segurança permitem gravação.</p>
       </div>
     );
   }
