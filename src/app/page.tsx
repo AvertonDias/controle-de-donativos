@@ -89,7 +89,11 @@ export default function Home({
                 <h2 className="text-xl font-headline font-bold text-accent">Conferência de Período</h2>
                 <p className="text-muted-foreground text-sm">Verificação automática de registros para dias de reunião</p>
               </div>
-              <MonthlyAudit entries={entries} selectedMonth={selectedMonth} />
+              <MonthlyAudit 
+                entries={entries} 
+                selectedMonth={selectedMonth} 
+                onAddJustification={addEntry} 
+              />
             </div>
           </div>
         </section>
