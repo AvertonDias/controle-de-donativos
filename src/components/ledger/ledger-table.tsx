@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -13,9 +13,10 @@ import {
 import { LedgerEntry } from "@/lib/ledger-store";
 import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Trash2, Pencil } from "lucide-react";
+import { Trash2, Pencil, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EditEntryModal } from "./edit-entry-modal";
+import { cn } from '@/lib/utils';
 
 interface LedgerTableProps {
   entries: LedgerEntry[];
@@ -23,14 +24,58 @@ interface LedgerTableProps {
   onUpdate: (id: string, originalDate: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => void;
 }
 
+type SortConfig = {
+  key: keyof LedgerEntry;
+  direction: 'asc' | 'desc';
+} | null;
+
 export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
   const [editingEntry, setEditingEntry] = useState<LedgerEntry | null>(null);
+  const [sortConfig, setSortConfig] = useState<SortConfig>(null);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
       style: 'currency',
       currency: 'BRL',
     }).format(value);
+  };
+
+  const handleSort = (key: keyof LedgerEntry) => {
+    let direction: 'asc' | 'desc' = 'asc';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
+      direction = 'desc';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  const sortedEntries = useMemo(() => {
+    let sortableItems = [...entries];
+    if (sortConfig !== null) {
+      sortableItems.sort((a, b) => {
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
+
+        if (aValue < bValue) {
+          return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+          return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableItems;
+  }, [entries, sortConfig]);
+
+  const SortIcon = ({ columnKey }: { columnKey: keyof LedgerEntry }) => {
+    if (!sortConfig || sortConfig.key !== columnKey) {
+      return <ArrowUpDown className="ml-2 h-4 w-4 opacity-50" />;
+    }
+    return sortConfig.direction === 'asc' ? (
+      <ArrowUp className="ml-2 h-4 w-4 text-primary" />
+    ) : (
+      <ArrowDown className="ml-2 h-4 w-4 text-primary" />
+    );
   };
 
   if (entries.length === 0) {
@@ -47,15 +92,47 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
       <Table>
         <TableHeader className="bg-muted/50">
           <TableRow>
-            <TableHead className="font-headline text-primary font-bold">Data</TableHead>
-            <TableHead className="font-headline text-primary font-bold">Obra Mundial</TableHead>
-            <TableHead className="font-headline text-primary font-bold">Congregação</TableHead>
-            <TableHead className="font-headline text-primary font-bold text-right">Soma do Dia</TableHead>
+            <TableHead 
+              className="font-headline text-primary font-bold cursor-pointer hover:bg-muted/80 transition-colors"
+              onClick={() => handleSort('date')}
+            >
+              <div className="flex items-center">
+                Data
+                <SortIcon columnKey="date" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="font-headline text-primary font-bold cursor-pointer hover:bg-muted/80 transition-colors"
+              onClick={() => handleSort('worldwideWork')}
+            >
+              <div className="flex items-center">
+                Obra Mundial
+                <SortIcon columnKey="worldwideWork" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="font-headline text-primary font-bold cursor-pointer hover:bg-muted/80 transition-colors"
+              onClick={() => handleSort('congregation')}
+            >
+              <div className="flex items-center">
+                Congregação
+                <SortIcon columnKey="congregation" />
+              </div>
+            </TableHead>
+            <TableHead 
+              className="font-headline text-primary font-bold text-right cursor-pointer hover:bg-muted/80 transition-colors"
+              onClick={() => handleSort('dailySum')}
+            >
+              <div className="flex items-center justify-end">
+                Soma do Dia
+                <SortIcon columnKey="dailySum" />
+              </div>
+            </TableHead>
             <TableHead className="w-24 text-center">Ações</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {entries.map((entry) => (
+          {sortedEntries.map((entry) => (
             <TableRow key={entry.id} className="animate-slide-up hover:bg-muted/30 transition-colors">
               <TableCell className="font-medium whitespace-nowrap">
                 {format(parseISO(entry.date), "dd 'de' MMM, yyyy", { locale: ptBR })}
