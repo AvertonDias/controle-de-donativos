@@ -2,14 +2,13 @@
 "use client";
 
 import * as React from "react";
-import { useLedger, LedgerEntry } from "@/lib/ledger-store";
+import { useLedger } from "@/lib/ledger-store";
 import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
 import { MonthlyAudit } from "@/components/ledger/monthly-audit";
-import { BookOpen, ListFilter, ClipboardCheck } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BookOpen } from "lucide-react";
 
 export default function Home({
   params: paramsPromise,
@@ -18,12 +17,12 @@ export default function Home({
   params: Promise<any>;
   searchParams: Promise<any>;
 }) {
+  // Next.js 15: Consumindo params e searchParams com React.use()
   React.use(paramsPromise);
   React.use(searchParamsPromise);
 
   const [selectedMonth, setSelectedMonth] = React.useState(new Date());
   
-  // Passamos o selectedMonth para o hook para que ele busque apenas dados desse mês
   const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger(selectedMonth);
 
   const filteredTotals = React.useMemo(() => {
@@ -70,44 +69,30 @@ export default function Home({
           <SummaryCards totals={filteredTotals} />
         </section>
 
-        <Tabs defaultValue="entries" className="w-full mt-4">
-          <TabsList className="grid w-full grid-cols-2 mb-8 bg-muted/50 p-1">
-            <TabsTrigger value="entries" className="flex items-center gap-2 py-2">
-              <ListFilter className="h-4 w-4" />
-              Lançamentos
-            </TabsTrigger>
-            <TabsTrigger value="audit" className="flex items-center gap-2 py-2">
-              <ClipboardCheck className="h-4 w-4" />
-              Conferência
-            </TabsTrigger>
-          </TabsList>
+        <section className="mb-12">
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+            <div>
+              <h2 className="text-2xl font-headline font-bold text-accent">Lançamentos do Mês</h2>
+              <p className="text-muted-foreground text-sm">Gestão consolidada das contribuições locais e mundiais</p>
+            </div>
+          </div>
+          
+          <div className="space-y-12">
+            <LedgerTable 
+              entries={entries} 
+              onDelete={deleteEntry} 
+              onUpdate={updateEntry}
+            />
 
-          <TabsContent value="entries" className="animate-slide-up focus-visible:outline-none">
-            <section className="mb-12">
-              <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
-                <div>
-                  <h2 className="text-2xl font-headline font-bold text-accent">Lançamentos do Mês</h2>
-                  <p className="text-muted-foreground text-sm">Gestão consolidada das contribuições locais e mundiais</p>
-                </div>
-              </div>
-              <LedgerTable 
-                entries={entries} 
-                onDelete={deleteEntry} 
-                onUpdate={updateEntry}
-              />
-            </section>
-          </TabsContent>
-
-          <TabsContent value="audit" className="animate-slide-up focus-visible:outline-none">
-            <section className="mb-12">
+            <div className="pt-8 border-t border-dashed">
               <div className="mb-6">
-                <h2 className="text-2xl font-headline font-bold text-accent">Auditoria Mensal</h2>
-                <p className="text-muted-foreground text-sm">Verificação de registros automáticos para dias de reunião</p>
+                <h2 className="text-xl font-headline font-bold text-accent">Conferência de Período</h2>
+                <p className="text-muted-foreground text-sm">Verificação automática de registros para dias de reunião</p>
               </div>
               <MonthlyAudit entries={entries} selectedMonth={selectedMonth} />
-            </section>
-          </TabsContent>
-        </Tabs>
+            </div>
+          </div>
+        </section>
       </main>
 
       <AddEntryModal onAdd={addEntry} />
