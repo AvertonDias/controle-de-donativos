@@ -19,7 +19,7 @@ export default function Home(props: {
 
   if (!isLoaded) return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse text-primary font-headline text-xl">esta demorando para carregar</div>
+      <div className="animate-pulse text-primary font-headline text-xl">carregando</div>
     </div>
   );
 
