@@ -1,7 +1,11 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
+import { collection, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { useFirestore, useCollection } from '@/firebase';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 export interface LedgerEntry {
   id: string;
@@ -9,54 +13,70 @@ export interface LedgerEntry {
   worldwideWork: number;
   congregation: number;
   dailySum: number;
+  createdAt?: any;
 }
 
-const STORAGE_KEY = 'uniteledger_entries';
-
 export function useLedger() {
-  const [entries, setEntries] = useState<LedgerEntry[]>([]);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const firestore = useFirestore();
 
-  useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      try {
-        setEntries(JSON.parse(saved));
-      } catch (e) {
-        console.error("Failed to load entries", e);
-      }
-    }
-    setIsLoaded(true);
-  }, []);
+  const donationsQuery = useMemo(() => {
+    if (!firestore) return null;
+    return query(collection(firestore, 'donations'), orderBy('date', 'desc'));
+  }, [firestore]);
 
-  useEffect(() => {
-    if (isLoaded) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
-    }
-  }, [entries, isLoaded]);
+  const { data: entries, loading } = useCollection<LedgerEntry>(donationsQuery);
 
   const addEntry = (entry: Omit<LedgerEntry, 'id' | 'dailySum'>) => {
+    if (!firestore) return;
+
     const dailySum = entry.worldwideWork + entry.congregation;
-    const newEntry = {
+    const donationData = {
       ...entry,
-      id: crypto.randomUUID(),
       dailySum,
+      createdAt: serverTimestamp(),
     };
-    setEntries((prev) => [newEntry, ...prev].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+
+    addDoc(collection(firestore, 'donations'), donationData)
+      .catch(async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: 'donations',
+          operation: 'create',
+          requestResourceData: donationData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
   const deleteEntry = (id: string) => {
-    setEntries((prev) => prev.filter((e) => e.id !== id));
+    if (!firestore) return;
+
+    const docRef = doc(firestore, 'donations', id);
+    deleteDoc(docRef)
+      .catch(async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'delete',
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
   };
 
-  const totals = entries.reduce(
-    (acc, entry) => ({
-      worldwideWork: acc.worldwideWork + entry.worldwideWork,
-      congregation: acc.congregation + entry.congregation,
-      total: acc.total + entry.dailySum,
-    }),
-    { worldwideWork: 0, congregation: 0, total: 0 }
-  );
+  const totals = useMemo(() => {
+    return (entries || []).reduce(
+      (acc, entry) => ({
+        worldwideWork: acc.worldwideWork + (entry.worldwideWork || 0),
+        congregation: acc.congregation + (entry.congregation || 0),
+        total: acc.total + (entry.dailySum || 0),
+      }),
+      { worldwideWork: 0, congregation: 0, total: 0 }
+    );
+  }, [entries]);
 
-  return { entries, addEntry, deleteEntry, totals, isLoaded };
+  return { 
+    entries: entries || [], 
+    addEntry, 
+    deleteEntry, 
+    totals, 
+    isLoaded: !loading 
+  };
 }

@@ -1,8 +1,8 @@
 
 {
-  "name": "UniteLedger",
-  "short_name": "UniteLedger",
-  "description": "Consolidated Financial Ledger for Communities",
+  "name": "Controle de Donativos",
+  "short_name": "Donativos",
+  "description": "Gestão Financeira Consolidada para Congregações",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#F5F7FA",

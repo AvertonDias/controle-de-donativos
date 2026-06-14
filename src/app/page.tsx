@@ -11,7 +11,11 @@ import { BookOpen } from "lucide-react";
 export default function Home() {
   const { entries, addEntry, deleteEntry, totals, isLoaded } = useLedger();
 
-  if (!isLoaded) return null;
+  if (!isLoaded) return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-pulse text-primary font-headline text-xl">Carregando...</div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen pb-24">
@@ -22,7 +26,7 @@ export default function Home() {
               <BookOpen className="h-6 w-6 text-white" />
             </div>
             <h1 className="text-2xl font-headline font-bold text-primary tracking-tight">
-              UniteLedger
+              Controle de Donativos
             </h1>
           </div>
           <div className="text-xs font-semibold text-muted-foreground uppercase tracking-widest hidden sm:block">
@@ -54,7 +58,7 @@ export default function Home() {
       <AddEntryModal onAdd={addEntry} />
       
       <footer className="mt-12 py-8 border-t text-center text-muted-foreground text-sm">
-        <p>© {new Date().getFullYear()} UniteLedger • Transparência e propósito na gestão financeira.</p>
+        <p>© {new Date().getFullYear()} Controle de Donativos • Transparência e propósito na gestão financeira.</p>
       </footer>
     </div>
   );

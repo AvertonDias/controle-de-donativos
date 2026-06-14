@@ -1,0 +1,51 @@
+
+{
+  "entities": {
+    "DonationEntry": {
+      "title": "Registro de Donativo",
+      "description": "Um lançamento diário de contribuições para a obra mundial e congregação.",
+      "type": "object",
+      "properties": {
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Data do lançamento"
+        },
+        "worldwideWork": {
+          "type": "number",
+          "description": "Valor para a Obra Mundial"
+        },
+        "congregation": {
+          "type": "number",
+          "description": "Valor para a Congregação"
+        },
+        "dailySum": {
+          "type": "number",
+          "description": "Soma total do dia"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Data de criação do registro"
+        }
+      },
+      "required": [
+        "date",
+        "worldwideWork",
+        "congregation",
+        "dailySum"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "google.com"
+    ]
+  },
+  "firestore": {
+    "/donations/{donationId}": {
+      "schema": "DonationEntry",
+      "description": "Coleção global de registros de donativos."
+    }
+  }
+}
