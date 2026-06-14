@@ -134,8 +134,8 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
         <TableBody>
           {sortedEntries.map((entry) => (
             <TableRow key={entry.id} className="animate-slide-up hover:bg-muted/30 transition-colors">
-              <TableCell className="font-medium whitespace-nowrap">
-                {format(parseISO(entry.date), "dd 'de' MMM, yyyy", { locale: ptBR })}
+              <TableCell className="font-medium whitespace-nowrap capitalize">
+                {format(parseISO(entry.date), "dd/MM eeee", { locale: ptBR })}
               </TableCell>
               <TableCell>{formatCurrency(entry.worldwideWork)}</TableCell>
               <TableCell>{formatCurrency(entry.congregation)}</TableCell>
