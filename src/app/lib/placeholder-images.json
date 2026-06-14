@@ -1,0 +1,11 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "app-logo",
+      "description": "Abstract indigo community logo",
+      "imageUrl": "https://picsum.photos/seed/unite-ledger-logo/200/200",
+      "imageHint": "indigo community"
+    }
+  ]
+}
