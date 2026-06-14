@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -6,7 +7,6 @@ import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
-import { ProjectionTool } from "@/components/ledger/projection-tool";
 import { BookOpen } from "lucide-react";
 import { isSameMonth, parseISO } from "date-fns";
 
@@ -21,7 +21,7 @@ export default function Home({
   React.use(paramsPromise);
   React.use(searchParamsPromise);
 
-  const { entries, addEntry, deleteEntry, isLoaded } = useLedger();
+  const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger();
   const [selectedMonth, setSelectedMonth] = React.useState(new Date());
 
   const filteredEntries = React.useMemo(() => {
@@ -81,11 +81,11 @@ export default function Home({
               <p className="text-muted-foreground text-sm">Gestão consolidada das contribuições locais e mundiais</p>
             </div>
           </div>
-          <LedgerTable entries={filteredEntries} onDelete={deleteEntry} />
-        </section>
-
-        <section>
-          <ProjectionTool entries={entries} />
+          <LedgerTable 
+            entries={filteredEntries} 
+            onDelete={deleteEntry} 
+            onUpdate={updateEntry}
+          />
         </section>
       </main>
 

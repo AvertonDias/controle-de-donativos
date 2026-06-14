@@ -2,7 +2,7 @@
 "use client";
 
 import { useMemo } from 'react';
-import { collection, query, orderBy, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, addDoc, deleteDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { useFirestore, useCollection } from '@/firebase';
 import { errorEmitter } from '@/firebase/error-emitter';
 import { FirestorePermissionError } from '@/firebase/errors';
@@ -47,6 +47,27 @@ export function useLedger() {
       });
   };
 
+  const updateEntry = (id: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => {
+    if (!firestore) return;
+
+    const dailySum = entry.worldwideWork + entry.congregation;
+    const donationData = {
+      ...entry,
+      dailySum,
+    };
+
+    const docRef = doc(firestore, 'donations', id);
+    updateDoc(docRef, donationData)
+      .catch(async (error) => {
+        const permissionError = new FirestorePermissionError({
+          path: docRef.path,
+          operation: 'update',
+          requestResourceData: donationData,
+        });
+        errorEmitter.emit('permission-error', permissionError);
+      });
+  };
+
   const deleteEntry = (id: string) => {
     if (!firestore) return;
 
@@ -75,6 +96,7 @@ export function useLedger() {
   return { 
     entries: entries || [], 
     addEntry, 
+    updateEntry,
     deleteEntry, 
     totals, 
     isLoaded: !loading 
