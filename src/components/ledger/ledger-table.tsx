@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { LedgerEntry } from "@/lib/ledger-store";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -19,8 +19,8 @@ import { EditEntryModal } from "./edit-entry-modal";
 
 interface LedgerTableProps {
   entries: LedgerEntry[];
-  onDelete: (id: string) => void;
-  onUpdate: (id: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => void;
+  onDelete: (id: string, date: string) => void;
+  onUpdate: (id: string, originalDate: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => void;
 }
 
 export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
@@ -35,7 +35,7 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
 
   if (entries.length === 0) {
     return (
-      <div className="p-12 text-center bg-card rounded-lg border border-dashed border-muted-foreground/30 text-muted-foreground">
+      <div className="p-12 text-center bg-card rounded-xl border border-dashed border-muted-foreground/30 text-muted-foreground">
         <p className="font-headline text-xl italic">ainda não está salvando no bd</p>
         <p className="text-sm mt-2">Nenhum registro encontrado para este período.</p>
       </div>
@@ -58,7 +58,7 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
           {entries.map((entry) => (
             <TableRow key={entry.id} className="animate-slide-up hover:bg-muted/30 transition-colors">
               <TableCell className="font-medium whitespace-nowrap">
-                {format(new Date(entry.date), "dd 'de' MMM, yyyy", { locale: ptBR })}
+                {format(parseISO(entry.date), "dd 'de' MMM, yyyy", { locale: ptBR })}
               </TableCell>
               <TableCell>{formatCurrency(entry.worldwideWork)}</TableCell>
               <TableCell>{formatCurrency(entry.congregation)}</TableCell>
@@ -79,7 +79,7 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors"
-                    onClick={() => onDelete(entry.id)}
+                    onClick={() => onDelete(entry.id, entry.date)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

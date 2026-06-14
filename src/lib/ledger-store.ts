@@ -16,19 +16,28 @@ export interface LedgerEntry {
   createdAt?: any;
 }
 
-export function useLedger() {
+export function useLedger(selectedDate: Date) {
   const firestore = useFirestore();
+
+  // Deriva o caminho do ano e mês a partir da data selecionada
+  const year = selectedDate.getFullYear().toString();
+  const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
 
   const donationsQuery = useMemo(() => {
     if (!firestore) return null;
-    return query(collection(firestore, 'donations'), orderBy('date', 'desc'));
-  }, [firestore]);
+    // Nova estrutura: donations/{year}/months/{month}/entries
+    return query(
+      collection(firestore, 'donations', year, 'months', month, 'entries'), 
+      orderBy('date', 'desc')
+    );
+  }, [firestore, year, month]);
 
   const { data: entries, loading } = useCollection<LedgerEntry>(donationsQuery);
 
   const addEntry = (entry: Omit<LedgerEntry, 'id' | 'dailySum'>) => {
     if (!firestore) return;
 
+    const [eYear, eMonth] = entry.date.split('-');
     const dailySum = entry.worldwideWork + entry.congregation;
     const donationData = {
       ...entry,
@@ -36,10 +45,12 @@ export function useLedger() {
       createdAt: serverTimestamp(),
     };
 
-    addDoc(collection(firestore, 'donations'), donationData)
+    const targetCollection = collection(firestore, 'donations', eYear, 'months', eMonth, 'entries');
+    
+    addDoc(targetCollection, donationData)
       .catch(async (error) => {
         const permissionError = new FirestorePermissionError({
-          path: 'donations',
+          path: targetCollection.path,
           operation: 'create',
           requestResourceData: donationData,
         });
@@ -47,16 +58,26 @@ export function useLedger() {
       });
   };
 
-  const updateEntry = (id: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => {
+  const updateEntry = (id: string, originalDate: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => {
     if (!firestore) return;
 
+    const [oldYear, oldMonth] = originalDate.split('-');
+    const [newYear, newMonth] = entry.date.split('-');
+    
     const dailySum = entry.worldwideWork + entry.congregation;
     const donationData = {
       ...entry,
       dailySum,
     };
 
-    const docRef = doc(firestore, 'donations', id);
+    // Se a data mudou de mês/ano, precisamos deletar do antigo e criar no novo
+    if (oldYear !== newYear || oldMonth !== newMonth) {
+      deleteEntry(id, originalDate);
+      addEntry(entry);
+      return;
+    }
+
+    const docRef = doc(firestore, 'donations', newYear, 'months', newMonth, 'entries', id);
     updateDoc(docRef, donationData)
       .catch(async (error) => {
         const permissionError = new FirestorePermissionError({
@@ -68,10 +89,12 @@ export function useLedger() {
       });
   };
 
-  const deleteEntry = (id: string) => {
+  const deleteEntry = (id: string, date: string) => {
     if (!firestore) return;
 
-    const docRef = doc(firestore, 'donations', id);
+    const [y, m] = date.split('-');
+    const docRef = doc(firestore, 'donations', y, 'months', m, 'entries', id);
+    
     deleteDoc(docRef)
       .catch(async (error) => {
         const permissionError = new FirestorePermissionError({
@@ -82,23 +105,11 @@ export function useLedger() {
       });
   };
 
-  const totals = useMemo(() => {
-    return (entries || []).reduce(
-      (acc, entry) => ({
-        worldwideWork: acc.worldwideWork + (entry.worldwideWork || 0),
-        congregation: acc.congregation + (entry.congregation || 0),
-        total: acc.total + (entry.dailySum || 0),
-      }),
-      { worldwideWork: 0, congregation: 0, total: 0 }
-    );
-  }, [entries]);
-
   return { 
     entries: entries || [], 
     addEntry, 
     updateEntry,
     deleteEntry, 
-    totals, 
     isLoaded: !loading 
   };
 }

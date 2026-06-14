@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "DonationEntry": {
@@ -42,9 +43,9 @@
     ]
   },
   "firestore": {
-    "/donations/{donationId}": {
+    "/donations/{yearId}/months/{monthId}/entries/{donationId}": {
       "schema": "DonationEntry",
-      "description": "Coleção global de registros de donativos da congregação."
+      "description": "Registros de donativos organizados de forma otimizada por ano e mês."
     }
   }
 }

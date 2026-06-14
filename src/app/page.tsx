@@ -2,13 +2,12 @@
 "use client";
 
 import * as React from "react";
-import { useLedger } from "@/lib/ledger-store";
+import { useLedger, LedgerEntry } from "@/lib/ledger-store";
 import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
 import { BookOpen } from "lucide-react";
-import { isSameMonth, parseISO } from "date-fns";
 
 export default function Home({
   params: paramsPromise,
@@ -17,21 +16,16 @@ export default function Home({
   params: Promise<any>;
   searchParams: Promise<any>;
 }) {
-  // Consumindo params e searchParams corretamente para Next.js 15
   React.use(paramsPromise);
   React.use(searchParamsPromise);
 
-  const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger();
   const [selectedMonth, setSelectedMonth] = React.useState(new Date());
-
-  const filteredEntries = React.useMemo(() => {
-    return (entries || []).filter((entry) => 
-      isSameMonth(parseISO(entry.date), selectedMonth)
-    );
-  }, [entries, selectedMonth]);
+  
+  // Passamos o selectedMonth para o hook para que ele busque apenas dados desse mês
+  const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger(selectedMonth);
 
   const filteredTotals = React.useMemo(() => {
-    return filteredEntries.reduce(
+    return entries.reduce(
       (acc, entry) => ({
         worldwideWork: acc.worldwideWork + (entry.worldwideWork || 0),
         congregation: acc.congregation + (entry.congregation || 0),
@@ -39,7 +33,7 @@ export default function Home({
       }),
       { worldwideWork: 0, congregation: 0, total: 0 }
     );
-  }, [filteredEntries]);
+  }, [entries]);
 
   if (!isLoaded) return (
     <div className="min-h-screen flex items-center justify-center bg-background">
@@ -82,7 +76,7 @@ export default function Home({
             </div>
           </div>
           <LedgerTable 
-            entries={filteredEntries} 
+            entries={entries} 
             onDelete={deleteEntry} 
             onUpdate={updateEntry}
           />

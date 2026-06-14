@@ -17,7 +17,7 @@ import { LedgerEntry } from '@/lib/ledger-store';
 interface EditEntryModalProps {
   entry: LedgerEntry | null;
   onClose: () => void;
-  onUpdate: (id: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => void;
+  onUpdate: (id: string, originalDate: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => void;
 }
 
 export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps) {
@@ -41,7 +41,7 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
     e.preventDefault();
     if (!entry) return;
 
-    onUpdate(entry.id, {
+    onUpdate(entry.id, entry.date, {
       date: formData.date,
       worldwideWork: parseFloat(formData.worldwideWork) || 0,
       congregation: parseFloat(formData.congregation) || 0,
