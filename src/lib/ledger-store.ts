@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo } from 'react';
@@ -16,24 +17,25 @@ export interface LedgerEntry {
   createdAt?: any;
 }
 
-export function useLedger(selectedDate: Date) {
+export function useLedger(selectedDate: Date, userId: string | undefined) {
   const firestore = useFirestore();
 
   const year = selectedDate.getFullYear().toString();
   const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
 
   const donationsQuery = useMemo(() => {
-    if (!firestore) return null;
+    if (!firestore || !userId) return null;
+    // O caminho agora inclui o userId para isolamento total de dados
     return query(
-      collection(firestore, 'donations', year, 'months', month, 'entries'), 
+      collection(firestore, 'users', userId, 'donations', year, 'months', month, 'entries'), 
       orderBy('date', 'desc')
     );
-  }, [firestore, year, month]);
+  }, [firestore, year, month, userId]);
 
   const { data: entries, loading } = useCollection<LedgerEntry>(donationsQuery);
 
   const addEntry = (entry: Omit<LedgerEntry, 'id' | 'dailySum'>) => {
-    if (!firestore) return;
+    if (!firestore || !userId) return;
 
     const [eYear, eMonth] = entry.date.split('-');
     const dailySum = (entry.worldwideWork || 0) + (entry.congregation || 0);
@@ -43,7 +45,7 @@ export function useLedger(selectedDate: Date) {
       createdAt: serverTimestamp(),
     };
 
-    const targetCollection = collection(firestore, 'donations', eYear, 'months', eMonth, 'entries');
+    const targetCollection = collection(firestore, 'users', userId, 'donations', eYear, 'months', eMonth, 'entries');
     
     addDoc(targetCollection, donationData)
       .catch(async (error) => {
@@ -57,7 +59,7 @@ export function useLedger(selectedDate: Date) {
   };
 
   const updateEntry = (id: string, originalDate: string, entry: Omit<LedgerEntry, 'id' | 'dailySum' | 'createdAt'>) => {
-    if (!firestore) return;
+    if (!firestore || !userId) return;
 
     const [oldYear, oldMonth] = originalDate.split('-');
     const [newYear, newMonth] = entry.date.split('-');
@@ -68,13 +70,14 @@ export function useLedger(selectedDate: Date) {
       dailySum,
     };
 
+    // Se a data mudou de mês ou ano, precisamos mover o registro para a subcoleção correta
     if (oldYear !== newYear || oldMonth !== newMonth) {
       deleteEntry(id, originalDate);
       addEntry(entry);
       return;
     }
 
-    const docRef = doc(firestore, 'donations', newYear, 'months', newMonth, 'entries', id);
+    const docRef = doc(firestore, 'users', userId, 'donations', newYear, 'months', newMonth, 'entries', id);
     updateDoc(docRef, donationData)
       .catch(async (error) => {
         const permissionError = new FirestorePermissionError({
@@ -87,10 +90,10 @@ export function useLedger(selectedDate: Date) {
   };
 
   const deleteEntry = (id: string, date: string) => {
-    if (!firestore) return;
+    if (!firestore || !userId) return;
 
     const [y, m] = date.split('-');
-    const docRef = doc(firestore, 'donations', y, 'months', m, 'entries', id);
+    const docRef = doc(firestore, 'users', userId, 'donations', y, 'months', m, 'entries', id);
     
     deleteDoc(docRef)
       .catch(async (error) => {
@@ -107,6 +110,6 @@ export function useLedger(selectedDate: Date) {
     addEntry, 
     updateEntry,
     deleteEntry, 
-    isLoaded: !loading 
+    isLoaded: !loading && !!userId
   };
 }

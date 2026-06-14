@@ -29,7 +29,8 @@ export default function Home() {
   const { user, loading: userLoading } = useUser();
   const [selectedMonth, setSelectedMonth] = React.useState(new Date());
   
-  const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger(selectedMonth);
+  // Passamos o user?.uid para o hook para isolar os dados por usuário
+  const { entries, addEntry, updateEntry, deleteEntry, isLoaded } = useLedger(selectedMonth, user?.uid);
 
   React.useEffect(() => {
     if (!userLoading && !user) {
@@ -63,7 +64,7 @@ export default function Home() {
 
   if (!isLoaded) return (
     <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="animate-pulse text-primary font-headline text-xl">carregando dados</div>
+      <div className="animate-pulse text-primary font-headline text-xl">conectando ao seu banco de dados</div>
     </div>
   );
 
@@ -99,7 +100,7 @@ export default function Home() {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-bold leading-none text-primary">{user.displayName || "Administrador"}</p>
+                    <p className="text-sm font-bold leading-none text-primary">{user.displayName || "Usuário"}</p>
                     <p className="text-xs leading-none text-muted-foreground truncate">{user.email}</p>
                   </div>
                 </DropdownMenuLabel>
@@ -126,8 +127,8 @@ export default function Home() {
         <section className="mb-12">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
             <div>
-              <h2 className="text-2xl font-headline font-bold text-accent">Lançamentos do Mês</h2>
-              <p className="text-muted-foreground text-sm">Gestão consolidada das contribuições locais e mundiais</p>
+              <h2 className="text-2xl font-headline font-bold text-accent">Seus Lançamentos</h2>
+              <p className="text-muted-foreground text-sm">Gestão consolidada das suas contribuições</p>
             </div>
           </div>
           

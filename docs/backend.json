@@ -48,9 +48,9 @@
     ]
   },
   "firestore": {
-    "/donations/{yearId}/months/{monthId}/entries/{donationId}": {
+    "/users/{userId}/donations/{yearId}/months/{monthId}/entries/{donationId}": {
       "schema": "DonationEntry",
-      "description": "Registros de donativos organizados de forma otimizada por ano e mês."
+      "description": "Registros de donativos exclusivos e privados de cada usuário."
     }
   }
 }
