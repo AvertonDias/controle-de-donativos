@@ -7,6 +7,7 @@ import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
+import { MonthlyAudit } from "@/components/ledger/monthly-audit";
 import { BookOpen } from "lucide-react";
 
 export default function Home({
@@ -66,6 +67,10 @@ export default function Home({
 
         <section>
           <SummaryCards totals={filteredTotals} />
+        </section>
+
+        <section>
+          <MonthlyAudit entries={entries} selectedMonth={selectedMonth} />
         </section>
 
         <section className="mb-12">
