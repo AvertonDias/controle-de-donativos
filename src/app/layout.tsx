@@ -1,4 +1,4 @@
-
+import * as React from 'react';
 import type {Metadata} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
@@ -10,11 +10,13 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+export default async function RootLayout(props: {
   children: React.ReactNode;
-}>) {
+  params: Promise<any>;
+}) {
+  // No Next.js 15, layouts (Server Components) devem aguardar params se forem acessados
+  await props.params;
+
   return (
     <html lang="pt-BR">
       <head>
@@ -27,7 +29,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
-          {children}
+          {props.children}
           <Toaster />
         </FirebaseClientProvider>
       </body>

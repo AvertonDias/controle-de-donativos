@@ -1,18 +1,25 @@
-
 "use client";
 
+import * as React from "react";
 import { useLedger } from "@/lib/ledger-store";
 import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { BookOpen } from "lucide-react";
 
-export default function Home() {
+export default function Home(props: {
+  params: Promise<any>;
+  searchParams: Promise<any>;
+}) {
+  // No Next.js 15, params e searchParams são promessas que devem ser consumidas com React.use()
+  React.use(props.params);
+  React.use(props.searchParams);
+
   const { entries, addEntry, deleteEntry, totals, isLoaded } = useLedger();
 
   if (!isLoaded) return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse text-primary font-headline text-xl">Carregando...</div>
+      <div className="animate-pulse text-primary font-headline text-xl">esta demorando para carregar</div>
     </div>
   );
 
@@ -46,7 +53,7 @@ export default function Home() {
               <p className="text-muted-foreground text-sm">Gestão consolidada das contribuições locais e mundiais</p>
             </div>
           </div>
-          <LedgerTable entries={entries} onDelete={deleteEntry} />
+          < LedgerTable entries={entries} onDelete={deleteEntry} />
         </section>
       </main>
 
