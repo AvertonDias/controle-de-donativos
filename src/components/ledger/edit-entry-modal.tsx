@@ -76,7 +76,6 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
                 placeholder="0.00"
                 value={formData.worldwideWork}
                 onChange={(e) => setFormData({ ...formData, worldwideWork: e.target.value })}
-                required
               />
             </div>
             <div className="space-y-2">
@@ -88,7 +87,6 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
                 placeholder="0.00"
                 value={formData.congregation}
                 onChange={(e) => setFormData({ ...formData, congregation: e.target.value })}
-                required
               />
             </div>
           </div>
