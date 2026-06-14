@@ -7,13 +7,17 @@ import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { BookOpen } from "lucide-react";
 
-export default function Home(props: {
+export default function Home({
+  params,
+  searchParams,
+}: {
   params: Promise<any>;
   searchParams: Promise<any>;
 }) {
   // No Next.js 15, params e searchParams são promessas que devem ser consumidas com React.use()
-  React.use(props.params);
-  React.use(props.searchParams);
+  // Desestruturar diretamente na assinatura da função ajuda a evitar erros de enumeração
+  React.use(params);
+  React.use(searchParams);
 
   const { entries, addEntry, deleteEntry, totals, isLoaded } = useLedger();
 

@@ -10,12 +10,15 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
 };
 
-export default async function RootLayout(props: {
+export default async function RootLayout({
+  children,
+  params,
+}: {
   children: React.ReactNode;
   params: Promise<any>;
 }) {
-  // No Next.js 15, layouts (Server Components) devem aguardar params se forem acessados
-  await props.params;
+  // No Next.js 15, layouts devem aguardar params explicitamente
+  await params;
 
   return (
     <html lang="pt-BR">
@@ -29,7 +32,7 @@ export default async function RootLayout(props: {
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
-          {props.children}
+          {children}
           <Toaster />
         </FirebaseClientProvider>
       </body>
