@@ -89,7 +89,7 @@ export function MonthlyAudit({ entries, selectedMonth, onAddJustification }: Mon
                 <div>
                   <p className="text-sm font-bold">Existem dias de reunião sem lançamentos:</p>
                   <p className="text-xs opacity-80 mt-1">
-                    Clique na data para adicionar uma justificativa (ex: feriado, congresso, sem reunião).
+                    Clique na data para adicionar uma justificativa (ex: congresso, sem reunião).
                   </p>
                 </div>
               </div>
@@ -148,7 +148,7 @@ export function MonthlyAudit({ entries, selectedMonth, onAddJustification }: Mon
               <Label htmlFor="reason" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Motivo / Observação</Label>
               <Textarea
                 id="reason"
-                placeholder="Ex: Não houve reunião, semana do congresso, feriado local..."
+                placeholder="Ex: Não houve reunião, semana do congresso..."
                 value={reason}
                 onChange={(e) => setReason(e.target.value)}
                 className="resize-none"
