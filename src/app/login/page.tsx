@@ -48,10 +48,21 @@ export default function LoginPage() {
       await signInWithPopup(auth, provider);
       router.push("/");
     } catch (error: any) {
+      let errorMessage = "Não foi possível entrar com sua conta Google.";
+      
+      // Tratamento de erros específicos do Firebase para orientar o usuário
+      if (error.code === 'auth/operation-not-allowed') {
+        errorMessage = "O login com Google não está ativado no Firebase Console (Authentication > Sign-in method).";
+      } else if (error.code === 'auth/unauthorized-domain') {
+        errorMessage = "Este domínio não está autorizado no Firebase Console. Adicione o domínio atual em Authentication > Settings.";
+      } else if (error.code === 'auth/popup-blocked') {
+        errorMessage = "O popup de login foi bloqueado pelo seu navegador.";
+      }
+
       toast({
         variant: "destructive",
         title: "Erro com Google",
-        description: "Não foi possível entrar com sua conta Google.",
+        description: errorMessage,
       });
     }
   };
