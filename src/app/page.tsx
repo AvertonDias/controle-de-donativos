@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -7,6 +6,7 @@ import { SummaryCards } from "@/components/ledger/summary-cards";
 import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
+import { ProjectionTool } from "@/components/ledger/projection-tool";
 import { BookOpen } from "lucide-react";
 import { isSameMonth, parseISO } from "date-fns";
 
@@ -66,7 +66,7 @@ export default function Home({
       </header>
 
       <main className="max-w-5xl mx-auto px-4 pt-8">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
+        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
           <MonthSelector currentDate={selectedMonth} onChange={setSelectedMonth} />
         </div>
 
@@ -82,6 +82,10 @@ export default function Home({
             </div>
           </div>
           <LedgerTable entries={filteredEntries} onDelete={deleteEntry} />
+        </section>
+
+        <section>
+          <ProjectionTool entries={entries} />
         </section>
       </main>
 
