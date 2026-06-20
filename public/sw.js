@@ -1,5 +1,5 @@
 
-// Service Worker minimalista para habilitar a instalação PWA
+// Service Worker essencial para habilitar a instalação como PWA
 self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
@@ -9,7 +9,6 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Necessário para cumprir os requisitos de instalação, 
-  // mesmo que não faça cache offline complexo no momento.
+  // Necessário para o Chrome considerar o site como PWA instalável
   event.respondWith(fetch(event.request));
 });
