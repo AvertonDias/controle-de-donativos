@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -30,17 +31,9 @@ export function InstallPwaPrompt() {
 
     // 2. Capturar evento de instalação no Android/Chrome
     const handleBeforeInstallPrompt = (e: any) => {
+      console.log('Capturado evento beforeinstallprompt');
       e.preventDefault();
       setDeferredPrompt(e);
-      
-      // Se o usuário está logado, mostramos o modal
-      if (!loading && user) {
-        const isDismissed = sessionStorage.getItem('pwa-prompt-dismissed-session');
-        if (!isDismissed) {
-          // Pequeno delay para não sobrecarregar a entrada do usuário
-          setTimeout(() => setIsOpen(true), 3000);
-        }
-      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -50,27 +43,28 @@ export function InstallPwaPrompt() {
     const ios = /iphone|ipad|ipod/.test(userAgent);
     setIsIos(ios);
 
-    if (ios && !loading && user) {
-      const isDismissed = sessionStorage.getItem('pwa-prompt-dismissed-session');
-      if (!isDismissed) {
-        setTimeout(() => setIsOpen(true), 5000);
-      }
-    }
-
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, [user, loading]);
+  }, []);
 
-  // Se o usuário logar e o evento de prompt já tiver ocorrido, forçamos a abertura se não tiver sido dispensado
+  // Efeito disparado após login para mostrar o modal
   useEffect(() => {
-    if (!loading && user && (deferredPrompt || isIos)) {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+    if (!loading && user) {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+        || (window.navigator as any).standalone;
+      
       if (isStandalone) return;
 
       const isDismissed = sessionStorage.getItem('pwa-prompt-dismissed-session');
-      if (!isDismissed) {
-        setIsOpen(true);
+      if (isDismissed) return;
+
+      // Se capturamos o evento do Android OU se for iOS
+      if (deferredPrompt || isIos) {
+        const timer = setTimeout(() => {
+          setIsOpen(true);
+        }, 3000); // 3 segundos após o login/carregamento
+        return () => clearTimeout(timer);
       }
     }
   }, [user, loading, deferredPrompt, isIos]);
@@ -79,6 +73,7 @@ export function InstallPwaPrompt() {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
+    console.log(`Usuário escolheu: ${outcome}`);
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
     }
@@ -86,7 +81,6 @@ export function InstallPwaPrompt() {
   };
 
   const dismissPrompt = () => {
-    // Usamos sessionStorage para que o prompt volte em uma nova sessão se ele ainda não instalou
     sessionStorage.setItem('pwa-prompt-dismissed-session', 'true');
     setIsOpen(false);
   };

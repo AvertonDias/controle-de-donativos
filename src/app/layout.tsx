@@ -1,9 +1,11 @@
+
 import * as React from 'react';
 import type {Metadata} from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from "@/components/ui/toaster";
 import { InstallPwaPrompt } from '@/components/install-pwa-prompt';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'Controle de Donativos',
@@ -50,6 +52,19 @@ export default async function RootLayout({
           <InstallPwaPrompt />
           <Toaster />
         </FirebaseClientProvider>
+        <Script id="register-sw" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(function(registration) {
+                  console.log('ServiceWorker registration successful');
+                }, function(err) {
+                  console.log('ServiceWorker registration failed: ', err);
+                });
+              });
+            }
+          `}
+        </Script>
       </body>
     </html>
   );
