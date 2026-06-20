@@ -40,7 +40,6 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
-        <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="theme-color" content="#4A3AFF" />
@@ -56,9 +55,9 @@ export default async function RootLayout({
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                  console.log('SW registrado!', reg.scope);
+                  console.log('PWA Service Worker registrado com sucesso:', reg.scope);
                 }).catch(function(err) {
-                  console.log('Erro no SW:', err);
+                  console.log('Falha ao registrar Service Worker:', err);
                 });
               });
             }

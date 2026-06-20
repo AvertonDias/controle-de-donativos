@@ -23,15 +23,18 @@ export function InstallPwaPrompt() {
   useEffect(() => {
     // Detectar se já é standalone
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-      || (window.navigator as any).standalone;
+      || (window.navigator as any).standalone === true;
 
-    if (isStandalone) return;
+    if (isStandalone) {
+      console.log('App já está rodando em modo standalone.');
+      return;
+    }
 
     // Escutar o evento de instalação (Android/Chrome)
     const handleBeforeInstallPrompt = (e: any) => {
+      console.log('Evento beforeinstallprompt capturado!');
       e.preventDefault();
       setDeferredPrompt(e);
-      console.log('Evento beforeinstallprompt capturado com sucesso!');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -45,22 +48,25 @@ export function InstallPwaPrompt() {
     };
   }, []);
 
-  // Mostrar modal após o login ser concluído
+  // Mostrar modal após o login
   useEffect(() => {
     if (!loading && user) {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-        || (window.navigator as any).standalone;
+        || (window.navigator as any).standalone === true;
       
       if (isStandalone) return;
 
       const timer = setTimeout(() => {
+        // Mostramos o modal se for iOS (que não dispara o evento) ou se o evento foi capturado no Chrome
         if (deferredPrompt || isIos) {
           const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
           if (!wasDismissed) {
             setIsOpen(true);
           }
+        } else {
+          console.log('Ainda não capturou o evento de instalação ou não é iOS.');
         }
-      }, 3000); // 3 segundos após o login
+      }, 3000);
 
       return () => clearTimeout(timer);
     }
@@ -70,6 +76,7 @@ export function InstallPwaPrompt() {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
+    console.log(`Usuário escolheu: ${outcome}`);
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
       setIsOpen(false);
