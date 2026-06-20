@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import type {Metadata} from 'next';
 import './globals.css';
@@ -42,6 +41,7 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
+        <link rel="manifest" href="/manifest.json" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="theme-color" content="#4A3AFF" />
@@ -57,7 +57,7 @@ export default async function RootLayout({
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                  console.log('ServiceWorker registration successful');
+                  console.log('ServiceWorker registration successful with scope: ', registration.scope);
                 }, function(err) {
                   console.log('ServiceWorker registration failed: ', err);
                 });
