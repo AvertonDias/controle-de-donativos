@@ -130,7 +130,7 @@ export default function LoginPage() {
           </div>
           <Button 
             variant="outline" 
-            className="w-full py-6 font-medium gap-2 border-primary/20 hover:bg-primary/5"
+            className="w-full py-6 font-medium gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary focus:text-primary transition-colors"
             onClick={handleGoogleLogin}
           >
             <Chrome className="h-5 w-5 text-primary" />
