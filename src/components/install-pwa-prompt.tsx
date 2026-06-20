@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -12,49 +13,54 @@ import {
 import { Button } from "@/components/ui/button";
 import { Share, PlusSquare } from "lucide-react";
 import Image from "next/image";
+import { useUser } from '@/firebase';
 
 export function InstallPwaPrompt() {
   const [isOpen, setIsOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIos, setIsIos] = useState(false);
+  const { user, loading } = useUser();
 
   useEffect(() => {
-    // 1. Verificar se já está rodando como app (standalone)
+    // 1. Verificar se já está instalado (standalone)
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone 
       || document.referrer.includes('android-app://');
 
     if (isStandalone) return;
 
-    // 2. Verificar se o usuário já dispensou o prompt nesta sessão
-    const isDismissed = localStorage.getItem('pwa-prompt-dismissed');
-    if (isDismissed) return;
-
-    // 3. Capturar evento de instalação no Android/Chrome/Desktop
+    // 2. Capturar evento de instalação no Android/Chrome
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      // Pequeno atraso para não ser intrusivo assim que carrega
-      setTimeout(() => setIsOpen(true), 2000);
+      
+      // Se o usuário acabou de logar e não está instalado, mostramos o modal
+      if (!loading && user) {
+        const isDismissed = sessionStorage.getItem('pwa-prompt-dismissed-session');
+        if (!isDismissed) {
+          setTimeout(() => setIsOpen(true), 3000);
+        }
+      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // 4. Detectar iOS (Safari não dispara beforeinstallprompt)
+    // 3. Detectar iOS
     const userAgent = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(userAgent);
     setIsIos(ios);
 
-    if (ios) {
-      // No iOS, mostramos o modal após alguns segundos se não estiver instalado
-      const timer = setTimeout(() => setIsOpen(true), 4000);
-      return () => clearTimeout(timer);
+    if (ios && !loading && user) {
+      const isDismissed = sessionStorage.getItem('pwa-prompt-dismissed-session');
+      if (!isDismissed) {
+        setTimeout(() => setIsOpen(true), 5000);
+      }
     }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, []);
+  }, [user, loading]);
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
@@ -67,8 +73,8 @@ export function InstallPwaPrompt() {
   };
 
   const dismissPrompt = () => {
-    // Salva no localStorage para não incomodar novamente logo em seguida
-    localStorage.setItem('pwa-prompt-dismissed', 'true');
+    // Usamos sessionStorage para que o prompt volte em uma nova sessão se ele ainda não instalou
+    sessionStorage.setItem('pwa-prompt-dismissed-session', 'true');
     setIsOpen(false);
   };
 
@@ -88,7 +94,7 @@ export function InstallPwaPrompt() {
             Instalar Aplicativo
           </DialogTitle>
           <DialogDescription className="pt-2 text-base text-foreground/80">
-            Adicione o <strong>Controle de Donativos</strong> à sua tela de início para um acesso rápido, melhor performance e uso offline.
+            Adicione o <strong>Controle de Donativos</strong> à sua tela de início para um acesso rápido e experiência completa.
           </DialogDescription>
         </DialogHeader>
 
@@ -97,16 +103,16 @@ export function InstallPwaPrompt() {
             <p className="font-semibold text-foreground">Para instalar no seu iPhone:</p>
             <ol className="list-decimal list-inside space-y-3">
               <li className="flex items-center gap-2 flex-wrap">
-                Toque no ícone de compartilhar <Share className="h-5 w-5 inline text-blue-500" /> na barra do navegador.
+                Toque no ícone de compartilhar <Share className="h-5 w-5 inline text-blue-500" /> na barra do Safari.
               </li>
               <li className="flex items-center gap-2 flex-wrap">
-                Role a lista e selecione <strong>"Adicionar à Tela de Início"</strong> <PlusSquare className="h-5 w-5 inline" />.
+                Role e selecione <strong>"Adicionar à Tela de Início"</strong> <PlusSquare className="h-5 w-5 inline" />.
               </li>
             </ol>
           </div>
         ) : (
           <div className="py-6 text-center">
-            <p className="text-muted-foreground italic">Tenha a experiência completa de um aplicativo no seu dispositivo.</p>
+            <p className="text-muted-foreground italic">Instale agora para usar como um aplicativo nativo no seu celular.</p>
           </div>
         )}
 
