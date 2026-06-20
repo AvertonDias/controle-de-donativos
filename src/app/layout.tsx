@@ -10,8 +10,13 @@ export const metadata: Metadata = {
   description: 'Gestão Financeira Consolidada para Congregações',
   manifest: '/manifest.json',
   icons: {
-    icon: '/Ico.png',
-    apple: '/Ico.png',
+    icon: [
+      { url: '/Ico.png' },
+      { url: '/Ico.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/Ico.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 };
 
