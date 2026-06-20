@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -12,8 +11,9 @@ import { LedgerTable } from "@/components/ledger/ledger-table";
 import { AddEntryModal } from "@/components/ledger/add-entry-modal";
 import { MonthSelector } from "@/components/ledger/month-selector";
 import { MonthlyAudit } from "@/components/ledger/monthly-audit";
-import { BookOpen, LogOut, Settings, TrendingUp } from "lucide-react";
+import { LogOut, Settings, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,8 +74,13 @@ export default function Home() {
       <header className="bg-white border-b sticky top-0 z-20 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-primary p-2 rounded-lg">
-              <BookOpen className="h-6 w-6 text-white" />
+            <div className="relative h-8 w-8 overflow-hidden rounded-lg">
+              <Image 
+                src="/Ico.png" 
+                alt="Logo" 
+                fill 
+                className="object-cover"
+              />
             </div>
             <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
               Controle de Donativos

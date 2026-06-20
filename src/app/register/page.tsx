@@ -14,7 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { BookOpen, Chrome } from "lucide-react";
+import { Chrome } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function RegisterPage() {
@@ -73,8 +74,13 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md shadow-xl border-primary/10">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-primary p-3 rounded-xl shadow-lg shadow-primary/20">
-              <BookOpen className="h-8 w-8 text-white" />
+            <div className="relative h-16 w-16 overflow-hidden rounded-xl shadow-lg shadow-primary/20">
+              <Image 
+                src="/Ico.png" 
+                alt="Logo App" 
+                fill 
+                className="object-cover"
+              />
             </div>
           </div>
           <CardTitle className="text-3xl font-headline font-bold text-primary">Criar Conta</CardTitle>

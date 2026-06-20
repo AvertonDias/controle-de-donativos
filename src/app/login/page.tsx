@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -14,7 +13,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { BookOpen, Chrome } from "lucide-react";
+import { Chrome } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -50,11 +50,10 @@ export default function LoginPage() {
     } catch (error: any) {
       let errorMessage = "Não foi possível entrar com sua conta Google.";
       
-      // Tratamento de erros específicos do Firebase para orientar o usuário
       if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "O login com Google não está ativado no Firebase Console (Authentication > Sign-in method).";
+        errorMessage = "O login com Google não está ativado no Firebase Console.";
       } else if (error.code === 'auth/unauthorized-domain') {
-        errorMessage = "Este domínio não está autorizado no Firebase Console. Adicione o domínio atual em Authentication > Settings.";
+        errorMessage = "Este domínio não está autorizado no Firebase Console.";
       } else if (error.code === 'auth/popup-blocked') {
         errorMessage = "O popup de login foi bloqueado pelo seu navegador.";
       }
@@ -72,8 +71,13 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-xl border-primary/10">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-primary p-3 rounded-xl shadow-lg shadow-primary/20">
-              <BookOpen className="h-8 w-8 text-white" />
+            <div className="relative h-16 w-16 overflow-hidden rounded-xl shadow-lg shadow-primary/20">
+              <Image 
+                src="/Ico.png" 
+                alt="Logo App" 
+                fill 
+                className="object-cover"
+              />
             </div>
           </div>
           <CardTitle className="text-3xl font-headline font-bold text-primary">Bem-vindo</CardTitle>

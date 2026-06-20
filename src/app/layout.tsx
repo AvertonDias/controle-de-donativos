@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import type {Metadata} from 'next';
 import './globals.css';
@@ -10,6 +9,10 @@ export const metadata: Metadata = {
   title: 'Controle de Donativos',
   description: 'Gestão Financeira Consolidada para Congregações',
   manifest: '/manifest.json',
+  icons: {
+    icon: '/Ico.png',
+    apple: '/Ico.png',
+  },
 };
 
 export default async function RootLayout({
@@ -19,7 +22,6 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<any>;
 }) {
-  // No Next.js 15, layouts devem aguardar params explicitamente
   await paramsPromise;
 
   return (
