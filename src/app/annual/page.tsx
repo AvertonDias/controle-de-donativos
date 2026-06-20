@@ -4,8 +4,8 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore } from "@/firebase";
-import { collection, query, getDocs, orderBy } from "firebase/firestore";
-import { BookOpen, ArrowLeft, TrendingUp, Calendar, Globe, Users, Wallet } from "lucide-react";
+import { collection, getDocs } from "firebase/firestore";
+import { ArrowLeft, TrendingUp, Globe, Users, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { format } from "date-fns";
@@ -49,7 +49,6 @@ export default function AnnualSummaryPage() {
       const monthsData: MonthlyTotal[] = [];
 
       try {
-        // Buscamos todos os meses do ano selecionado
         for (let m = 1; m <= 12; m++) {
           const monthStr = m.toString().padStart(2, '0');
           const entriesRef = collection(firestore, 'users', user.uid, 'donations', yearStr, 'months', monthStr, 'entries');
