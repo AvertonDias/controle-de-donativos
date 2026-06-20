@@ -76,6 +76,8 @@ export default function LoginPage() {
                 src="/Ico.png" 
                 alt="Logo App" 
                 fill 
+                sizes="64px"
+                priority
                 className="object-cover"
               />
             </div>

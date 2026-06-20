@@ -50,6 +50,7 @@ export default function ForgotPasswordPage() {
                 src="/Ico.png" 
                 alt="Logo App" 
                 fill 
+                sizes="64px"
                 className="object-cover"
               />
             </div>

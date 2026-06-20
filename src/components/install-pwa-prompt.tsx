@@ -53,8 +53,6 @@ export function InstallPwaPrompt() {
       
       if (isStandalone) return;
 
-      // Só abre o modal se capturamos o evento OU se for iOS
-      // Adicionamos um pequeno delay para garantir que a UI carregou
       const timer = setTimeout(() => {
         if (deferredPrompt || isIos) {
           const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
@@ -62,7 +60,7 @@ export function InstallPwaPrompt() {
             setIsOpen(true);
           }
         }
-      }, 4000);
+      }, 3000); // 3 segundos após o login
 
       return () => clearTimeout(timer);
     }
@@ -93,6 +91,7 @@ export function InstallPwaPrompt() {
                 src="/Ico.png" 
                 alt="App Icon" 
                 fill 
+                sizes="48px"
                 className="object-cover"
               />
             </div>
@@ -118,7 +117,7 @@ export function InstallPwaPrompt() {
                 <Download className="h-8 w-8 text-primary animate-bounce" />
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">Isso criará um aplicativo real, não apenas um atalho.</p>
+            <p className="text-sm text-muted-foreground">Isso instalará o aplicativo real no seu dispositivo.</p>
           </div>
         )}
 

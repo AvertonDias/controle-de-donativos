@@ -79,6 +79,7 @@ export default function Home() {
                 src="/Ico.png" 
                 alt="Logo" 
                 fill 
+                sizes="32px"
                 className="object-cover"
               />
             </div>
