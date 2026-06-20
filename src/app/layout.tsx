@@ -18,6 +18,11 @@ export const metadata: Metadata = {
       { url: '/Ico.png', sizes: '180x180', type: 'image/png' },
     ],
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'Donativos',
+  },
 };
 
 export default async function RootLayout({

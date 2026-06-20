@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -34,10 +33,11 @@ export function InstallPwaPrompt() {
       e.preventDefault();
       setDeferredPrompt(e);
       
-      // Se o usuário acabou de logar e não está instalado, mostramos o modal
+      // Se o usuário está logado, mostramos o modal
       if (!loading && user) {
         const isDismissed = sessionStorage.getItem('pwa-prompt-dismissed-session');
         if (!isDismissed) {
+          // Pequeno delay para não sobrecarregar a entrada do usuário
           setTimeout(() => setIsOpen(true), 3000);
         }
       }
@@ -45,7 +45,7 @@ export function InstallPwaPrompt() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // 3. Detectar iOS
+    // 3. Detectar iOS para instruções manuais
     const userAgent = window.navigator.userAgent.toLowerCase();
     const ios = /iphone|ipad|ipod/.test(userAgent);
     setIsIos(ios);
@@ -61,6 +61,19 @@ export function InstallPwaPrompt() {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, [user, loading]);
+
+  // Se o usuário logar e o evento de prompt já tiver ocorrido, forçamos a abertura se não tiver sido dispensado
+  useEffect(() => {
+    if (!loading && user && (deferredPrompt || isIos)) {
+      const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
+      if (isStandalone) return;
+
+      const isDismissed = sessionStorage.getItem('pwa-prompt-dismissed-session');
+      if (!isDismissed) {
+        setIsOpen(true);
+      }
+    }
+  }, [user, loading, deferredPrompt, isIos]);
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
