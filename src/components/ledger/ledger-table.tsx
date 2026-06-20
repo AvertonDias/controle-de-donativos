@@ -22,6 +22,16 @@ import {
   TooltipContent,
 } from "@/components/ui/tooltip";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface LedgerTableProps {
   entries: LedgerEntry[];
@@ -36,6 +46,7 @@ type SortConfig = {
 
 export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
   const [editingEntry, setEditingEntry] = useState<LedgerEntry | null>(null);
+  const [entryToDelete, setEntryToDelete] = useState<LedgerEntry | null>(null);
   const [sortConfig, setSortConfig] = useState<SortConfig>(null);
 
   const formatCurrency = (value: number) => {
@@ -83,6 +94,13 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
     );
   };
 
+  const confirmDelete = () => {
+    if (entryToDelete) {
+      onDelete(entryToDelete.id, entryToDelete.date);
+      setEntryToDelete(null);
+    }
+  };
+
   if (entries.length === 0) {
     return (
       <div className="p-12 text-center bg-card rounded-xl border border-dashed border-muted-foreground/30 text-muted-foreground">
@@ -123,7 +141,7 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
                     variant="ghost"
                     size="icon"
                     className="h-8 w-8 text-destructive"
-                    onClick={() => onDelete(entry.id, entry.date)}
+                    onClick={() => setEntryToDelete(entry)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
@@ -246,7 +264,7 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
                       variant="ghost"
                       size="icon"
                       className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors"
-                      onClick={() => onDelete(entry.id, entry.date)}
+                      onClick={() => setEntryToDelete(entry)}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
@@ -263,6 +281,23 @@ export function LedgerTable({ entries, onDelete, onUpdate }: LedgerTableProps) {
         onClose={() => setEditingEntry(null)} 
         onUpdate={onUpdate} 
       />
+
+      <AlertDialog open={!!entryToDelete} onOpenChange={(open) => !open && setEntryToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Você tem certeza?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. O registro de donativo do dia {entryToDelete && format(parseISO(entryToDelete.date), "dd/MM/yyyy")} será removido permanentemente.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Confirmar para apagar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
