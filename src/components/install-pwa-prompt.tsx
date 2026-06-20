@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -11,7 +10,8 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Download, Share, PlusSquare } from "lucide-react";
+import { Share, PlusSquare } from "lucide-react";
+import Image from "next/image";
 
 export function InstallPwaPrompt() {
   const [isOpen, setIsOpen] = useState(false);
@@ -76,8 +76,15 @@ export function InstallPwaPrompt() {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px] border-primary/20">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-primary font-headline text-2xl">
-            <Download className="h-6 w-6" />
+          <DialogTitle className="flex items-center gap-3 text-primary font-headline text-2xl">
+            <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-lg shadow-primary/20">
+              <Image 
+                src="/Ico.png" 
+                alt="App Icon" 
+                fill 
+                className="object-cover"
+              />
+            </div>
             Instalar Aplicativo
           </DialogTitle>
           <DialogDescription className="pt-2 text-base text-foreground/80">
