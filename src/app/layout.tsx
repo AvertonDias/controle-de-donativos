@@ -13,7 +13,6 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       { url: '/Ico.png' },
-      { url: '/Ico.png', sizes: '192x192', type: 'image/png' },
     ],
     apple: [
       { url: '/Ico.png', sizes: '180x180', type: 'image/png' },
@@ -56,10 +55,10 @@ export default async function RootLayout({
           {`
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(function(registration) {
-                  console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                }, function(err) {
-                  console.log('ServiceWorker registration failed: ', err);
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                  console.log('SW registrado!', reg.scope);
+                }).catch(function(err) {
+                  console.log('Erro no SW:', err);
                 });
               });
             }
