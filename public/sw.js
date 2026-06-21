@@ -1,15 +1,32 @@
-const CACHE_NAME = 'donativos-cache-v1';
+const CACHE_NAME = 'donativos-v1';
+const ASSETS = [
+  '/',
+  '/manifest.json',
+  '/Ico.png'
+];
 
 self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(ASSETS);
+    })
+  );
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim();
 });
 
+// O evento FETCH é OBRIGATÓRIO para o Chrome oferecer a instalação de APP em vez de ATALHO
 self.addEventListener('fetch', (event) => {
-  // O Chrome EXIGE um listener de fetch para habilitar o botão de 'Instalar Aplicativo'
   event.respondWith(
     fetch(event.request).catch(() => {
       return caches.match(event.request);

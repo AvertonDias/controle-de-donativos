@@ -43,6 +43,7 @@ export default async function RootLayout({
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="theme-color" content="#4A3AFF" />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
@@ -55,7 +56,7 @@ export default async function RootLayout({
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                  console.log('PWA Service Worker registrado com sucesso:', reg.scope);
+                  console.log('PWA Service Worker registrado:', reg.scope);
                 }).catch(function(err) {
                   console.log('Falha ao registrar Service Worker:', err);
                 });
