@@ -63,6 +63,7 @@ export default function SettingsPage() {
     return JSON.stringify(sortedCurrent) !== JSON.stringify(sortedSaved);
   }, [selectedDays, settings]);
 
+  // Sincroniza o estado de "sujo" com a janela global para o menu lateral
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).__SETTINGS_DIRTY__ = hasChanges;
@@ -74,6 +75,7 @@ export default function SettingsPage() {
     };
   }, [hasChanges]);
 
+  // Trava de fechamento de aba/refresh do navegador
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasChanges) {
