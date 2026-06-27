@@ -10,7 +10,6 @@ import {
   TrendingUp, 
   Settings, 
   LogOut, 
-  Calendar,
   ChevronRight
 } from "lucide-react";
 import {
@@ -109,23 +108,6 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        <SidebarGroup className="mt-4">
-          <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
-            Resumo do Período
-          </SidebarGroupLabel>
-          <SidebarGroupContent className="px-6">
-            <div className="p-4 rounded-xl bg-blue-50 border border-blue-100 space-y-2">
-              <div className="flex items-center gap-2 text-blue-600">
-                <Calendar className="h-4 w-4" />
-                <span className="text-xs font-bold">{new Date().getFullYear()}</span>
-              </div>
-              <p className="text-[10px] text-blue-800/70 font-medium italic">
-                Acompanhe o crescimento das suas contribuições anualmente através do Resumo Anual.
-              </p>
-            </div>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
