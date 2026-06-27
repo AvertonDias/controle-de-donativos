@@ -6,6 +6,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Service Worker para PWA - Controle de Donativos
 >>>>>>> c4f5254 (Achei o problema. 🎯)
 =======
@@ -17,17 +18,25 @@ const CACHE_NAME = 'donativos-cache-v1';
 =======
 const CACHE_NAME = 'donativos-v2';
 >>>>>>> 67edcdd (coloque estas opções em um menu lateral (_for element <Primitive.div>_))
+=======
+/**
+ * Service Worker PWA
+ * Essencial para habilitar a instalação como "Aplicativo" no Android/Chrome.
+ */
+
+const CACHE_NAME = 'donativos-v1';
+>>>>>>> c67c850 (react-dom-client.development.js:25630 Download the React DevTools for a)
 
 >>>>>>> 18e8d70 (O problema nº 1)
 self.addEventListener('install', (event) => {
-  console.log('PWA: Service Worker instalando...');
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('PWA: Service Worker ativado');
+  event.waitUntil(clients.claim());
 });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -63,4 +72,14 @@ self.addEventListener('fetch', (event) => {
   // Apenas responde para permitir que o navegador valide o PWA
   event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
 >>>>>>> 67edcdd (coloque estas opções em um menu lateral (_for element <Primitive.div>_))
+=======
+// O evento fetch é OBRIGATÓRIO para o Chrome oferecer a instalação como App
+self.addEventListener('fetch', (event) => {
+  // Estratégia de rede primeiro para evitar dados desatualizados no Firebase
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    })
+  );
+>>>>>>> c67c850 (react-dom-client.development.js:25630 Download the React DevTools for a)
 });

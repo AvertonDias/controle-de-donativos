@@ -55,8 +55,7 @@ export function InstallPwaPrompt() {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      console.log('PWA: Prompt de instalação ainda não disponível');
-      alert("O navegador ainda está validando o aplicativo. Por favor, aguarde alguns segundos e tente novamente.");
+      alert("O navegador ainda está preparando o ambiente. Por favor, tente novamente em alguns segundos.");
       return;
     }
     
@@ -64,11 +63,8 @@ export function InstallPwaPrompt() {
     const { outcome } = await deferredPrompt.userChoice;
     
     if (outcome === 'accepted') {
-      console.log('PWA: Usuário aceitou a instalação');
       setDeferredPrompt(null);
       setIsOpen(false);
-    } else {
-      console.log('PWA: Usuário recusou a instalação');
     }
   };
 
