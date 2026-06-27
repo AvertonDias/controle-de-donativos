@@ -29,7 +29,7 @@ export function InstallPwaPrompt() {
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      console.log('PWA: Evento de instalação capturado');
+      console.log('PWA: Evento beforeinstallprompt capturado');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -42,7 +42,7 @@ export function InstallPwaPrompt() {
     };
   }, []);
 
-  // Lógica para abrir o modal automaticamente após o login
+  // Abre o modal após o login se o prompt estiver disponível
   useEffect(() => {
     if (user && (deferredPrompt || isIos)) {
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
@@ -56,14 +56,20 @@ export function InstallPwaPrompt() {
   }, [user, deferredPrompt, isIos]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      console.log('PWA: Prompt de instalação ainda não disponível');
+      return;
+    }
     
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     
     if (outcome === 'accepted') {
+      console.log('PWA: Usuário aceitou a instalação');
       setDeferredPrompt(null);
       setIsOpen(false);
+    } else {
+      console.log('PWA: Usuário recusou a instalação');
     }
   };
 

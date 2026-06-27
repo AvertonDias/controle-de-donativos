@@ -4,22 +4,28 @@
 =======
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 // Service Worker para PWA - Controle de Donativos
 >>>>>>> c4f5254 (Achei o problema. 🎯)
 =======
 >>>>>>> 2dc54ce (Make the following changes:)
 const CACHE_NAME = 'donativos-v1';
+=======
+const CACHE_NAME = 'donativos-cache-v1';
+>>>>>>> fe21102 ((índice):1 Access to manifest at 'https://6000-firebase-studio-178144311)
 
 >>>>>>> 18e8d70 (O problema nº 1)
 self.addEventListener('install', (event) => {
-  console.log('PWA: Service Worker instalado');
   self.skipWaiting();
+  console.log('PWA: Service Worker instalado');
 });
 
 self.addEventListener('activate', (event) => {
+  event.waitUntil(clients.claim());
   console.log('PWA: Service Worker ativado');
 });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -40,8 +46,11 @@ self.addEventListener('fetch', (event) => {
   );
 =======
 // O Chrome exige o evento fetch para habilitar a instalação como App
+=======
+// O evento fetch é obrigatório para que o Chrome ofereça a instalação como "App"
+>>>>>>> fe21102 ((índice):1 Access to manifest at 'https://6000-firebase-studio-178144311)
 self.addEventListener('fetch', (event) => {
-  // Respondemos com a rede por padrão, mas o evento deve existir
+  // Apenas passa adiante, mas a existência do listener habilita o PWA
   event.respondWith(fetch(event.request));
 >>>>>>> 2dc54ce (Make the following changes:)
 });
