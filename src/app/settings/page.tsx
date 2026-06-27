@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -64,6 +63,18 @@ export default function SettingsPage() {
     return JSON.stringify(sortedCurrent) !== JSON.stringify(sortedSaved);
   }, [selectedDays, settings]);
 
+  // Sincroniza o estado de "sujo" com a janela global para o menu lateral
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__SETTINGS_DIRTY__ = hasChanges;
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        (window as any).__SETTINGS_DIRTY__ = false;
+      }
+    };
+  }, [hasChanges]);
+
   // Trava de fechamento de aba/refresh do navegador
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -86,6 +97,9 @@ export default function SettingsPage() {
 
   const handleSave = () => {
     updateSettings({ meetingDays: selectedDays });
+    if (typeof window !== 'undefined') {
+      (window as any).__SETTINGS_DIRTY__ = false;
+    }
     toast({
       title: "Configurações salvas!",
       description: "Os dias de reunião foram atualizados com sucesso.",
@@ -208,6 +222,9 @@ export default function SettingsPage() {
             <AlertDialogCancel>Permanecer e Salvar</AlertDialogCancel>
             <AlertDialogAction 
               onClick={() => {
+                if (typeof window !== 'undefined') {
+                  (window as any).__SETTINGS_DIRTY__ = false;
+                }
                 setShowExitConfirm(false);
                 toggleSidebar();
               }}
