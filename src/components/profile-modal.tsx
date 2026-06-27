@@ -1,4 +1,3 @@
-
 'use client';
 
 import * as React from 'react';
@@ -102,6 +101,7 @@ export function ProfileModal({ user, open, onOpenChange }: ProfileModalProps) {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Seu nome"
                 required
+                autoComplete="name"
               />
             </div>
             <div className="space-y-4 border-t pt-4">
