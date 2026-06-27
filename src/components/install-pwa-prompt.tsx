@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -18,9 +19,10 @@ export function InstallPwaPrompt() {
   const [isOpen, setIsOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isIos, setIsIos] = useState(false);
-  const { user, loading } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
+    // Detecta se já está instalado
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone === true;
 
@@ -29,11 +31,7 @@ export function InstallPwaPrompt() {
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      
-      const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
-      if (!wasDismissed && user) {
-        setIsOpen(true);
-      }
+      console.log('PWA: Evento de instalação capturado');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -44,7 +42,17 @@ export function InstallPwaPrompt() {
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, [user]);
+  }, []);
+
+  // Lógica para abrir o modal automaticamente após o login
+  useEffect(() => {
+    if (user && deferredPrompt) {
+      const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
+      if (!wasDismissed) {
+        setIsOpen(true);
+      }
+    }
+  }, [user, deferredPrompt]);
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
@@ -87,7 +95,7 @@ export function InstallPwaPrompt() {
             </div>
           </div>
           <p className="pt-2 text-base text-foreground/80 leading-relaxed">
-            Tenha uma experiência melhor instalando o aplicativo na sua tela de início.
+            Tenha uma experiência melhor instalando o aplicativo oficial na sua tela de início.
           </p>
         </DialogHeader>
 
@@ -107,7 +115,7 @@ export function InstallPwaPrompt() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground px-4">
-              Isso instalará o aplicativo real no seu dispositivo.
+              Isso instalará o aplicativo real no seu dispositivo Android.
             </p>
           </div>
         )}
@@ -117,9 +125,8 @@ export function InstallPwaPrompt() {
             <Button 
               onClick={handleInstallClick} 
               className="w-full bg-primary hover:bg-accent py-6 text-lg font-bold shadow-md"
-              disabled={!deferredPrompt}
             >
-              {deferredPrompt ? 'Instalar Agora' : 'Aguarde...'}
+              Instalar Agora
             </Button>
           )}
           <Button variant="ghost" onClick={dismissPrompt} className="w-full text-muted-foreground hover:text-primary">

@@ -1,6 +1,6 @@
 
 import * as React from 'react';
-import type {Metadata} from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from "@/components/ui/toaster";
@@ -14,7 +14,15 @@ export const metadata: Metadata = {
     icon: '/Ico.png',
     apple: '/Ico.png',
   },
-  // O Next.js usará automaticamente o manifest.ts
+  manifest: '/manifest.json',
+};
+
+export const viewport: Viewport = {
+  themeColor: '#4A3AFF',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -29,7 +37,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="theme-color" content="#4A3AFF" />
         <link rel="apple-touch-icon" href="/Ico.png" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
@@ -43,9 +50,9 @@ export default function RootLayout({
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                  console.log('PWA: Service Worker registrado com sucesso');
+                  console.log('PWA: Service Worker registrado');
                 }).catch(function(err) {
-                  console.log('PWA: Falha ao registrar Service Worker:', err);
+                  console.log('PWA: Erro no SW:', err);
                 });
               });
             }

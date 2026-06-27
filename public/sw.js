@@ -1,23 +1,17 @@
 
-// Service Worker para PWA - Controle de Donativos
 const CACHE_NAME = 'donativos-v1';
 
 self.addEventListener('install', (event) => {
-  console.log('SW: Instalado');
+  console.log('PWA: Service Worker instalado');
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('SW: Ativado');
-  event.waitUntil(clients.claim());
+  console.log('PWA: Service Worker ativado');
 });
 
-// O evento fetch é OBRIGATÓRIO para que o Chrome ofereça "Instalar Aplicativo"
+// O Chrome exige o evento fetch para habilitar a instalação como App
 self.addEventListener('fetch', (event) => {
-  // Estratégia Network-first com fallback para cache
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      return caches.match(event.request);
-    })
-  );
+  // Respondemos com a rede por padrão, mas o evento deve existir
+  event.respondWith(fetch(event.request));
 });
