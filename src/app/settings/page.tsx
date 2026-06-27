@@ -37,13 +37,12 @@ export default function SettingsPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
   const { settings, updateSettings, loading: settingsLoading } = useUserSettings(user?.uid);
-  const { toggleSidebar, open, openMobile, isMobile } = useSidebar();
+  const { isMobile, openMobile, open } = useSidebar();
   const { toast } = useToast();
   
   const [selectedDays, setSelectedDays] = React.useState<number[]>([]);
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
 
-  // Verifica se o menu está aberto para permitir o fechamento sem aviso
   const isSidebarOpen = isMobile ? openMobile : open;
 
   React.useEffect(() => {
@@ -106,7 +105,7 @@ export default function SettingsPage() {
     router.push("/");
   };
 
-  const handleExitAttempt = (e: React.MouseEvent) => {
+  const handleToggleAttempt = (e: React.MouseEvent) => {
     // Se o menu estiver aberto, fechar ele não é sair da página, então permitimos
     if (isSidebarOpen) {
       return;
@@ -131,11 +130,12 @@ export default function SettingsPage() {
     <div className="min-h-screen pb-24 bg-background">
       <header className="fixed top-0 left-0 right-0 bg-white border-b z-[60] shadow-sm">
         <div className="px-4 h-16 flex items-center justify-start gap-4">
-          <div onClickCapture={handleExitAttempt} className="inline-block">
-            <SidebarTrigger className="text-primary hover:bg-primary/5">
-              <Menu className="h-6 w-6" />
-            </SidebarTrigger>
-          </div>
+          <SidebarTrigger 
+            onClick={handleToggleAttempt}
+            className="text-primary hover:bg-primary/5"
+          >
+            <Menu className="h-6 w-6" />
+          </SidebarTrigger>
           <div className="flex items-center gap-2">
             <div className="relative h-8 w-8 overflow-hidden rounded-lg">
               <Image 
@@ -191,13 +191,11 @@ export default function SettingsPage() {
                       id={`day-${day.id}`} 
                       checked={selectedDays.includes(day.id)} 
                       onCheckedChange={() => toggleDay(day.id)}
-                      className="h-5 w-5"
-                      onClick={(e) => e.stopPropagation()}
+                      className="h-5 w-5 pointer-events-none"
                     />
                     <Label 
                       htmlFor={`day-${day.id}`} 
                       className="flex-1 cursor-pointer font-bold text-base"
-                      onClick={(e) => e.stopPropagation()}
                     >
                       {day.label}
                     </Label>
@@ -228,7 +226,7 @@ export default function SettingsPage() {
                   (window as any).__SETTINGS_DIRTY__ = false;
                 }
                 setShowExitConfirm(false);
-                toggleSidebar();
+                router.push("/");
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
