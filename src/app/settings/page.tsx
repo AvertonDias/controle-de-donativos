@@ -106,7 +106,6 @@ export default function SettingsPage() {
   };
 
   const handleToggleAttempt = (e: React.MouseEvent) => {
-    // Se o menu estiver aberto, fechar ele não é sair da página, então permitimos
     if (isSidebarOpen) {
       return;
     }
@@ -152,11 +151,11 @@ export default function SettingsPage() {
           </div>
           <Button 
             onClick={handleSave} 
-            className={`gap-2 font-bold transition-all ml-4 ${hasChanges ? 'bg-primary shadow-lg scale-105' : 'bg-muted text-muted-foreground'}`}
+            className={`gap-2 font-bold transition-all ml-auto ${hasChanges ? 'bg-primary shadow-lg scale-105' : 'bg-muted text-muted-foreground'}`}
             disabled={!hasChanges}
           >
             <Save className="h-4 w-4" />
-            Salvar Alterações
+            Salvar
           </Button>
         </div>
       </header>
@@ -166,7 +165,7 @@ export default function SettingsPage() {
           {hasChanges && (
             <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
               <AlertTriangle className="h-5 w-5 shrink-0" />
-              <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar Alterações" antes de sair.</p>
+              <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar" antes de sair.</p>
             </div>
           )}
 
@@ -176,7 +175,7 @@ export default function SettingsPage() {
                 <Calendar className="h-6 w-6" /> Dias de Reunião
               </CardTitle>
               <CardDescription>
-                Selecione os dias da semana em que sua congregação realiza reuniões. O sistema usará isso para auditar se há lançamentos nestes dias.
+                Selecione os dias da semana em que sua congregação realiza reuniões.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -215,7 +214,7 @@ export default function SettingsPage() {
               Alterações não salvas
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Você fez alterações nos dias de reunião. Se sair agora, essas mudanças serão perdidas. Deseja realmente sair?
+              Você fez alterações que ainda não foram salvas. Se sair agora, essas mudanças serão perdidas.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
