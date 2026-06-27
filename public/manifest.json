@@ -1,5 +1,6 @@
+
 {
-  "id": "controle-donativos-app",
+  "id": "controle-donativos-pwa",
   "name": "Controle de Donativos",
   "short_name": "Donativos",
   "description": "Gestão Financeira Consolidada para Congregações",
@@ -13,7 +14,7 @@
       "src": "/Ico.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable any"
+      "purpose": "any"
     },
     {
       "src": "/Ico.png",

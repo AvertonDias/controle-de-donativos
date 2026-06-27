@@ -1,3 +1,4 @@
+
 {
-  "comment": "Este arquivo foi movido para /public/manifest.json para ser servido como arquivo estático."
+  "comment": "Arquivo desativado para evitar erro 500. O manifesto real está em /public/manifest.json"
 }

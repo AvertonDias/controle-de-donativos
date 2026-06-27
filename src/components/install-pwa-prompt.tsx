@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -29,9 +30,10 @@ export function InstallPwaPrompt() {
 
     // Escutar o evento de instalação (Android/Chrome)
     const handleBeforeInstallPrompt = (e: any) => {
+      console.log('Evento beforeinstallprompt capturado');
       e.preventDefault();
       setDeferredPrompt(e);
-      // Se já estiver logado, podemos abrir o modal
+      
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
       if (!wasDismissed && user) {
         setIsOpen(true);
@@ -66,11 +68,14 @@ export function InstallPwaPrompt() {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      alert("O navegador ainda está preparando os recursos do aplicativo. Por favor, tente novamente em alguns segundos.");
+      alert("O navegador ainda está validando o aplicativo. Por favor, aguarde alguns segundos ou tente recarregar a página.");
       return;
     }
+    
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
+    console.log('Escolha do usuário:', outcome);
+    
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
       setIsOpen(false);
@@ -126,7 +131,7 @@ export function InstallPwaPrompt() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground px-4">
-              Isso criará o aplicativo real no seu dispositivo, com acesso rápido e tela cheia.
+              Isso criará o aplicativo real no seu dispositivo, com acesso rápido e sem barras do navegador.
             </p>
           </div>
         )}
