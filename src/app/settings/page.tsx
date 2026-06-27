@@ -37,13 +37,12 @@ export default function SettingsPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
   const { settings, updateSettings, loading: settingsLoading } = useUserSettings(user?.uid);
-  const { toggleSidebar, open, openMobile, isMobile } = useSidebar();
+  const { isMobile, openMobile, open } = useSidebar();
   const { toast } = useToast();
   
   const [selectedDays, setSelectedDays] = React.useState<number[]>([]);
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
 
-  // Verifica se o menu está aberto para permitir o fechamento sem aviso
   const isSidebarOpen = isMobile ? openMobile : open;
 
   React.useEffect(() => {
@@ -192,13 +191,11 @@ export default function SettingsPage() {
                       id={`day-${day.id}`} 
                       checked={selectedDays.includes(day.id)} 
                       onCheckedChange={() => toggleDay(day.id)}
-                      className="h-5 w-5"
-                      onClick={(e) => e.stopPropagation()}
+                      className="h-5 w-5 pointer-events-none"
                     />
                     <Label 
                       htmlFor={`day-${day.id}`} 
                       className="flex-1 cursor-pointer font-bold text-base"
-                      onClick={(e) => e.stopPropagation()}
                     >
                       {day.label}
                     </Label>
