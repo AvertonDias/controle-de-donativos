@@ -69,26 +69,7 @@ export function AppSidebar() {
 
   return (
     <Sidebar className="border-r border-primary/10 shadow-xl bg-white dark:bg-zinc-950 opacity-100">
-      <SidebarHeader className="p-6">
-        <div className="flex items-center gap-3">
-          <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-lg shadow-primary/20">
-            <Image 
-              src="/Ico.png" 
-              alt="Logo" 
-              fill 
-              sizes="40px"
-              priority
-              className="object-cover"
-            />
-          </div>
-          <div>
-            <h1 className="font-headline font-bold text-primary text-lg leading-tight">Donativos</h1>
-            <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Congregação</p>
-          </div>
-        </div>
-      </SidebarHeader>
-
-      <SidebarContent className="bg-white">
+      <SidebarContent className="bg-white pt-10">
         <SidebarGroup>
           <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
             Navegação Principal
