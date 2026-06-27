@@ -127,7 +127,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen pb-24 bg-background">
-      <header className="bg-white border-b sticky top-0 z-20 shadow-sm">
+      <header className="fixed top-0 left-0 right-0 bg-white border-b z-[60] shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div onClickCapture={handleExitAttempt} className="inline-block">
@@ -161,7 +161,7 @@ export default function SettingsPage() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pt-8">
+      <main className="max-w-3xl mx-auto px-4 pt-24">
         {hasChanges && (
           <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
             <AlertTriangle className="h-5 w-5 shrink-0" />

@@ -4,7 +4,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore } from "@/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { Menu, TrendingUp, Globe, Users, Wallet } from "lucide-react";
+import { Menu, Globe, Users, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { format } from "date-fns";
@@ -109,7 +109,7 @@ export default function AnnualSummaryPage() {
 
   return (
     <div className="min-h-screen pb-24 bg-background">
-      <header className="bg-white border-b sticky top-0 z-20 shadow-sm">
+      <header className="fixed top-0 left-0 right-0 bg-white border-b z-[60] shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <SidebarTrigger className="text-primary hover:bg-primary/5">
@@ -142,7 +142,7 @@ export default function AnnualSummaryPage() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 pt-8">
+      <main className="max-w-5xl mx-auto px-4 pt-24">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card className="border-none shadow-sm bg-blue-50">
             <CardHeader className="pb-2">
