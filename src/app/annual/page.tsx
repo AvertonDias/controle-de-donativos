@@ -1,10 +1,11 @@
+
 "use client";
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore } from "@/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { Menu, Globe, Users, Wallet } from "lucide-react";
+import { Menu, Globe, Users, Wallet, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { format } from "date-fns";
@@ -128,19 +129,39 @@ export default function AnnualSummaryPage() {
               Resumo Anual
             </h1>
           </div>
-          <div className="flex items-center gap-2 ml-4">
-            <Button variant="outline" size="sm" onClick={() => setYear(year - 1)}>
-              {year - 1}
-            </Button>
-            <span className="font-bold text-lg px-2">{year}</span>
-            <Button variant="outline" size="sm" onClick={() => setYear(year + 1)}>
-              {year + 1}
-            </Button>
-          </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 pt-16">
+      <main className="max-w-5xl mx-auto px-4 pt-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="mt-8 flex items-center gap-2">
+          <div className="flex items-center bg-white p-1 rounded-xl border shadow-sm">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9"
+              onClick={() => setYear(year - 1)}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            
+            <div className="px-4 flex items-center gap-2 h-9">
+              <Calendar className="h-4 w-4 text-primary" />
+              <span className="font-headline font-bold text-lg">
+                Ano de {year}
+              </span>
+            </div>
+
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-9 w-9"
+              onClick={() => setYear(year + 1)}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+
         <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card className="border-none shadow-sm bg-blue-50">
             <CardHeader className="pb-2">
