@@ -59,7 +59,7 @@ export default function RootLayout({
           {`
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                navigator.worker.register('/sw.js').then(function(reg) {
                   console.log('PWA: Service Worker registrado com sucesso');
                 }).catch(function(err) {
                   console.log('PWA: Erro ao registrar Service Worker:', err);

@@ -1,0 +1,4 @@
+
+{
+  "info": "Este arquivo foi movido para src/app/manifest.ts para seguir o padrao do Next.js 15 e evitar erro 500."
+}
