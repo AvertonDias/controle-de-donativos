@@ -148,7 +148,7 @@ export default function AnnualSummaryPage() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 pt-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <main className="max-w-5xl mx-auto px-4 pt-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="mt-8 flex items-center gap-2">
           <div className="flex items-center bg-white p-1 rounded-xl border shadow-sm">
             <Button 

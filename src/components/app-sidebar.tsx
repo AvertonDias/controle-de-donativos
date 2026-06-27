@@ -50,9 +50,8 @@ export function AppSidebar() {
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null);
 
   const handleLogout = async () => {
-    // Se estiver nas configurações com alterações, pergunta antes de deslogar
     if (typeof window !== 'undefined' && (window as any).__SETTINGS_DIRTY__ && pathname === "/settings") {
-      setPendingUrl("/login-after-logout"); // Sinal especial
+      setPendingUrl("/login-after-logout");
       setShowExitConfirm(true);
       return;
     }
@@ -68,7 +67,6 @@ export function AppSidebar() {
       return;
     }
 
-    // Verifica se há alterações não salvas nas configurações através da variável global
     if (typeof window !== 'undefined' && (window as any).__SETTINGS_DIRTY__ && pathname === "/settings") {
       setPendingUrl(url);
       setShowExitConfirm(true);
@@ -82,7 +80,6 @@ export function AppSidebar() {
   const confirmNavigation = async () => {
     if (!pendingUrl) return;
 
-    // Reseta a trava global
     if (typeof window !== 'undefined') {
       (window as any).__SETTINGS_DIRTY__ = false;
     }
@@ -124,7 +121,7 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar className="border-r border-primary/10 shadow-xl bg-white dark:bg-zinc-950 opacity-100">
-        <SidebarContent className="bg-white pt-24">
+        <SidebarContent className="bg-white pt-16">
           <SidebarGroup>
             <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
               Navegação Principal
