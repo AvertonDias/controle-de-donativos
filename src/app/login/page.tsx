@@ -48,11 +48,10 @@ export default function LoginPage() {
       await signInWithPopup(auth, provider);
       router.push("/");
     } catch (error: any) {
-      let errorMessage = "Não foi possível entrar com sua conta Google.";
       toast({
         variant: "destructive",
         title: "Erro com Google",
-        description: errorMessage,
+        description: "Não foi possível entrar com sua conta Google.",
       });
     }
   };
@@ -89,7 +88,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
-                autoComplete="email"
+                autoComplete="username email"
               />
             </div>
             <div className="space-y-2">

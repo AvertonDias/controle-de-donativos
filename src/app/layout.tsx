@@ -9,19 +9,9 @@ import Script from 'next/script';
 export const metadata: Metadata = {
   title: 'Controle de Donativos',
   description: 'Gestão Financeira Consolidada para Congregações',
-  manifest: '/manifest.json',
   icons: {
-    icon: [
-      { url: '/Ico.png' },
-    ],
-    apple: [
-      { url: '/Ico.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Donativos',
+    icon: '/Ico.png',
+    apple: '/Ico.png',
   },
 };
 
@@ -38,7 +28,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#4A3AFF" />
-        {/* O crossOrigin é vital para evitar erros de CORS no manifesto em ambientes de dev */}
+        {/* crossOrigin é vital para evitar bloqueio CORS no ambiente Cloud */}
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
@@ -52,9 +42,9 @@ export default function RootLayout({
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                  console.log('PWA Service Worker registrado com sucesso');
+                  console.log('PWA: Service Worker registrado com sucesso');
                 }).catch(function(err) {
-                  console.log('Falha ao registrar Service Worker:', err);
+                  console.log('PWA: Falha ao registrar Service Worker:', err);
                 });
               });
             }
