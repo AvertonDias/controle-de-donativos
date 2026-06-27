@@ -43,6 +43,7 @@ export default function AnnualSummaryPage() {
   const [loading, setLoading] = React.useState(true);
   const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
 
+  // Gera uma lista de anos para o seletor (ex: 2020 até 2030)
   const availableYears = React.useMemo(() => {
     const list = [];
     for (let i = 2020; i <= 2030; i++) {
