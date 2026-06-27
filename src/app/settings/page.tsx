@@ -37,11 +37,14 @@ export default function SettingsPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
   const { settings, updateSettings, loading: settingsLoading } = useUserSettings(user?.uid);
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open, openMobile, isMobile } = useSidebar();
   const { toast } = useToast();
   
   const [selectedDays, setSelectedDays] = React.useState<number[]>([]);
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
+
+  // Verifica se o menu está aberto para permitir o fechamento sem aviso
+  const isSidebarOpen = isMobile ? openMobile : open;
 
   React.useEffect(() => {
     if (!userLoading && !user) {
@@ -104,12 +107,16 @@ export default function SettingsPage() {
   };
 
   const handleExitAttempt = (e: React.MouseEvent) => {
+    // Se o menu estiver aberto, fechar ele não é sair da página, então permitimos
+    if (isSidebarOpen) {
+      return;
+    }
+
     if (hasChanges) {
       e.preventDefault();
       e.stopPropagation();
       setShowExitConfirm(true);
     }
-    // Se não houver alterações, não fazemos nada aqui e deixamos o SidebarTrigger original cuidar do toggleSidebar().
   };
 
   if (userLoading || settingsLoading) {
