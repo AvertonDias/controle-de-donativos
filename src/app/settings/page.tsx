@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -9,8 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Settings, ArrowLeft, Calendar, Save } from "lucide-react";
+import { Settings, Menu, Calendar, Save } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import Image from "next/image";
 
 const DAYS_OF_WEEK = [
   { id: 0, label: "Domingo" },
@@ -70,13 +71,23 @@ export default function SettingsPage() {
     <div className="min-h-screen pb-24 bg-background">
       <header className="bg-white border-b sticky top-0 z-20 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.push("/")}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="text-primary hover:bg-primary/5">
+              <Menu className="h-6 w-6" />
+            </SidebarTrigger>
             <div className="flex items-center gap-2">
-              <Settings className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-headline font-bold text-primary">Configurações</h1>
+              <div className="relative h-8 w-8 overflow-hidden rounded-lg">
+                <Image 
+                  src="/Ico.png" 
+                  alt="Logo" 
+                  fill 
+                  sizes="32px"
+                  className="object-cover"
+                />
+              </div>
+              <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
+                Configurações
+              </h1>
             </div>
           </div>
           <Button onClick={handleSave} className="gap-2 bg-primary font-bold">

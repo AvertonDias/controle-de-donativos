@@ -1,15 +1,16 @@
-
 "use client";
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useUser, useFirestore } from "@/firebase";
 import { collection, getDocs } from "firebase/firestore";
-import { ArrowLeft, TrendingUp, Globe, Users, Wallet } from "lucide-react";
+import { Menu, TrendingUp, Globe, Users, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import Image from "next/image";
 import {
   Table,
   TableBody,
@@ -110,13 +111,23 @@ export default function AnnualSummaryPage() {
     <div className="min-h-screen pb-24 bg-background">
       <header className="bg-white border-b sticky top-0 z-20 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => router.push("/")}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="text-primary hover:bg-primary/5">
+              <Menu className="h-6 w-6" />
+            </SidebarTrigger>
             <div className="flex items-center gap-2">
-              <TrendingUp className="h-6 w-6 text-primary" />
-              <h1 className="text-xl font-headline font-bold text-primary">Resumo Anual</h1>
+              <div className="relative h-8 w-8 overflow-hidden rounded-lg">
+                <Image 
+                  src="/Ico.png" 
+                  alt="Logo" 
+                  fill 
+                  sizes="32px"
+                  className="object-cover"
+                />
+              </div>
+              <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
+                Resumo Anual
+              </h1>
             </div>
           </div>
           <div className="flex items-center gap-2">
