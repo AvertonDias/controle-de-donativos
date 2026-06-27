@@ -31,6 +31,11 @@ export function InstallPwaPrompt() {
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
+      // Se já estiver logado, podemos abrir o modal
+      const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
+      if (!wasDismissed && user) {
+        setIsOpen(true);
+      }
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -42,9 +47,9 @@ export function InstallPwaPrompt() {
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
-  }, []);
+  }, [user]);
 
-  // Mostrar modal após o login
+  // Mostrar modal após o login caso o evento já tenha disparado
   useEffect(() => {
     if (!loading && user) {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
@@ -52,19 +57,18 @@ export function InstallPwaPrompt() {
       
       if (isStandalone) return;
 
-      const timer = setTimeout(() => {
-        const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
-        if (!wasDismissed) {
-          setIsOpen(true);
-        }
-      }, 3000);
-
-      return () => clearTimeout(timer);
+      const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
+      if (!wasDismissed && deferredPrompt) {
+        setIsOpen(true);
+      }
     }
-  }, [user, loading]);
+  }, [user, loading, deferredPrompt]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
+    if (!deferredPrompt) {
+      alert("O navegador ainda está preparando os recursos do aplicativo. Por favor, tente novamente em alguns segundos.");
+      return;
+    }
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
     if (outcome === 'accepted') {
