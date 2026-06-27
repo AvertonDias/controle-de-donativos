@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -88,7 +89,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
-                autoComplete="username email"
+                autoComplete="email"
               />
             </div>
             <div className="space-y-2">

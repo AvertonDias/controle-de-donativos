@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import type {Metadata} from 'next';
 import './globals.css';
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
     icon: '/Ico.png',
     apple: '/Ico.png',
   },
+  // O Next.js usará automaticamente o manifest.ts
 };
 
 export default function RootLayout({
@@ -28,8 +30,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#4A3AFF" />
-        {/* crossOrigin é vital para evitar bloqueio CORS no ambiente Cloud */}
-        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+        <link rel="apple-touch-icon" href="/Ico.png" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
