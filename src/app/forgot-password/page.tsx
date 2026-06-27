@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -72,6 +73,7 @@ export default function ForgotPasswordPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required 
+                  autoComplete="email"
                 />
               </div>
               <Button type="submit" className="w-full py-6 font-bold" disabled={loading}>
