@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -34,17 +33,18 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        <link rel="manifest" href="/manifest.webmanifest" crossOrigin="use-credentials" />
+        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <link rel="apple-touch-icon" href="/Ico.png" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
           <SidebarProvider>
-            <div className="flex min-h-screen w-full">
+            <div className="flex min-h-screen w-full bg-background">
               <AppSidebar />
               <div className="flex-1 w-full overflow-x-hidden">
                 {children}

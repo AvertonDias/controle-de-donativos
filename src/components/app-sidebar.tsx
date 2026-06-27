@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -39,7 +38,6 @@ export function AppSidebar() {
     router.push("/login");
   };
 
-  // Não renderiza a sidebar em páginas de login/registro
   if (!user || pathname === "/login" || pathname === "/register" || pathname === "/forgot-password") {
     return null;
   }
@@ -63,7 +61,7 @@ export function AppSidebar() {
   ];
 
   return (
-    <Sidebar className="border-r border-primary/10 shadow-xl bg-white">
+    <Sidebar className="border-r border-primary/10 shadow-xl bg-white dark:bg-zinc-950 opacity-100">
       <SidebarHeader className="p-6">
         <div className="flex items-center gap-3">
           <div className="relative h-10 w-10 overflow-hidden rounded-xl shadow-lg shadow-primary/20">
@@ -83,7 +81,7 @@ export function AppSidebar() {
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="bg-white">
         <SidebarGroup>
           <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
             Navegação Principal
@@ -112,8 +110,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="p-6">
-        <Separator className="mb-6 opacity-50" />
+      <SidebarFooter className="p-6 bg-white border-t">
         <div className="space-y-4">
           <div className="flex items-center gap-3 p-2 rounded-xl border border-primary/5 bg-muted/30">
             <Avatar className="h-10 w-10 border-2 border-white shadow-sm">

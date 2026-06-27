@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -43,7 +42,7 @@ export function InstallPwaPrompt() {
   }, []);
 
   useEffect(() => {
-    if (user) {
+    if (user && deferredPrompt) {
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
       if (!wasDismissed) {
         const timer = setTimeout(() => {
@@ -52,13 +51,10 @@ export function InstallPwaPrompt() {
         return () => clearTimeout(timer);
       }
     }
-  }, [user]);
+  }, [user, deferredPrompt]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      alert("O navegador ainda está preparando o ambiente. Por favor, tente novamente em alguns segundos.");
-      return;
-    }
+    if (!deferredPrompt) return;
     
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
