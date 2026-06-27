@@ -1,7 +1,7 @@
 {
   "name": "Controle de Donativos",
   "short_name": "Donativos",
-  "description": "Gestão Financeira para Congregações",
+  "description": "Gestão Financeira Consolidada para Congregações",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

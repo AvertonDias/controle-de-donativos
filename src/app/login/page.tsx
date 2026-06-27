@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -87,9 +86,9 @@ export default function LoginPage() {
                 type="email" 
                 placeholder="seu@email.com" 
                 value={email}
-                onChange={(e) => setEmail(setFormField("email", e.target.value))}
+                onChange={(e) => setEmail(e.target.value)}
                 required 
-                autoComplete="email username"
+                autoComplete="username email"
               />
             </div>
             <div className="space-y-2">
@@ -143,8 +142,4 @@ export default function LoginPage() {
       </Card>
     </div>
   );
-}
-
-function setFormField(field: string, value: string): string {
-  return value;
 }
