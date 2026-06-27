@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -46,7 +45,6 @@ export default function SettingsPage() {
 
   const isSidebarOpen = isMobile ? openMobile : open;
 
-  // Sincroniza dados iniciais
   React.useEffect(() => {
     if (!userLoading && !user) {
       router.push("/login");
@@ -59,14 +57,12 @@ export default function SettingsPage() {
     }
   }, [settings]);
 
-  // Detecta se houve mudanças comparando os arrays ordenados
   const hasChanges = React.useMemo(() => {
     const sortedCurrent = [...selectedDays].sort((a, b) => a - b);
     const sortedSaved = [...(settings?.meetingDays || [])].sort((a, b) => a - b);
     return JSON.stringify(sortedCurrent) !== JSON.stringify(sortedSaved);
   }, [selectedDays, settings]);
 
-  // Sincroniza estado dirty com a flag global para a Sidebar
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).__SETTINGS_DIRTY__ = hasChanges;
@@ -78,7 +74,6 @@ export default function SettingsPage() {
     };
   }, [hasChanges]);
 
-  // Trava de fechamento de aba/refresh do navegador
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasChanges) {
@@ -111,13 +106,11 @@ export default function SettingsPage() {
   };
 
   const handleToggleAttempt = (e: React.MouseEvent) => {
-    // Se o menu já estiver aberto, permite fechar normalmente
     if (isSidebarOpen) {
       toggleSidebar();
       return;
     }
 
-    // Se houver mudanças, bloqueia a abertura do menu e mostra o alerta
     if (hasChanges) {
       e.preventDefault();
       e.stopPropagation();

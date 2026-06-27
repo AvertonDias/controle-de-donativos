@@ -86,7 +86,7 @@ export default function LoginPage() {
                 type="email" 
                 placeholder="seu@email.com" 
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(setFormField("email", e.target.value))}
                 required 
                 autoComplete="email username"
               />
@@ -142,4 +142,8 @@ export default function LoginPage() {
       </Card>
     </div>
   );
+}
+
+function setFormField(field: string, value: string): string {
+  return value;
 }
