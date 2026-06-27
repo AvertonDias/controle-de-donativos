@@ -22,9 +22,9 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupContent,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 
 export function AppSidebar() {
@@ -32,10 +32,17 @@ export function AppSidebar() {
   const pathname = usePathname();
   const auth = useAuth();
   const { user } = useUser();
+  const { setOpenMobile } = useSidebar();
 
   const handleLogout = async () => {
     await signOut(auth);
+    setOpenMobile(false);
     router.push("/login");
+  };
+
+  const handleNavigation = (url: string) => {
+    router.push(url);
+    setOpenMobile(false);
   };
 
   if (!user || pathname === "/login" || pathname === "/register" || pathname === "/forgot-password") {
@@ -91,7 +98,7 @@ export function AppSidebar() {
               {navItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton 
-                    onClick={() => router.push(item.url)}
+                    onClick={() => handleNavigation(item.url)}
                     isActive={pathname === item.url}
                     className={`
                       py-6 px-4 rounded-xl transition-all duration-200
