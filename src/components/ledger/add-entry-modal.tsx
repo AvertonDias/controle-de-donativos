@@ -9,6 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -40,8 +41,10 @@ export function AddEntryModal({ onAdd }: AddEntryModalProps) {
       }).format(now);
     };
     
-    setFormData(prev => ({ ...prev, date: getBrasiliaDate() }));
-  }, [open]); // Atualiza sempre que o modal abre para garantir que a data esteja correta se passar da meia-noite
+    if (open) {
+      setFormData(prev => ({ ...prev, date: getBrasiliaDate() }));
+    }
+  }, [open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,6 +84,9 @@ export function AddEntryModal({ onAdd }: AddEntryModalProps) {
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle className="font-headline text-2xl text-primary">Nova Contribuição</DialogTitle>
+            <DialogDescription className="sr-only">
+              Preencha os valores para a obra mundial e congregação para registrar o donativo.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 py-6">
             <div className="space-y-2">

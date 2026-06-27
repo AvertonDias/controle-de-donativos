@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -58,6 +59,9 @@ export function EditEntryModal({ entry, onClose, onUpdate }: EditEntryModalProps
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle className="font-headline text-2xl text-primary">Editar Registro</DialogTitle>
+            <DialogDescription className="sr-only">
+              Altere as informações do registro de donativo selecionado.
+            </DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 py-6">
             <div className="space-y-2">
