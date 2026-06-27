@@ -54,10 +54,7 @@ export function InstallPwaPrompt() {
   }, [user, deferredPrompt, isIos]);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      alert("O navegador ainda está preparando o ambiente. Por favor, tente novamente em alguns segundos.");
-      return;
-    }
+    if (!deferredPrompt) return;
     
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;

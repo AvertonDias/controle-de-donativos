@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 
@@ -24,6 +25,8 @@ const CACHE_NAME = 'donativos-v2';
  * Essencial para habilitar a instalação como "Aplicativo" no Android/Chrome.
  */
 
+=======
+>>>>>>> fe27d0c (o menu está transparente  (_for element <SidebarContent>_))
 const CACHE_NAME = 'donativos-v1';
 >>>>>>> c67c850 (react-dom-client.development.js:25630 Download the React DevTools for a)
 
@@ -36,6 +39,7 @@ self.addEventListener('activate', (event) => {
   event.waitUntil(clients.claim());
 });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -82,4 +86,11 @@ self.addEventListener('fetch', (event) => {
     })
   );
 >>>>>>> c67c850 (react-dom-client.development.js:25630 Download the React DevTools for a)
+=======
+// O evento fetch é obrigatório para que o Chrome ofereça a instalação como APP
+self.addEventListener('fetch', (event) => {
+  // Apenas passa a requisição adiante (estratégia network-only simples)
+  // Mas a existência deste listener habilita o PWA
+  event.respondWith(fetch(event.request));
+>>>>>>> fe27d0c (o menu está transparente  (_for element <SidebarContent>_))
 });
