@@ -89,7 +89,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required 
-                autoComplete="email"
+                autoComplete="username email"
               />
             </div>
             <div className="space-y-2">
