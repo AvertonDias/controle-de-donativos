@@ -74,7 +74,7 @@ export default function Home() {
                 />
               </div>
               <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
-                Donativos
+                Controle de Donativos
               </h1>
             </div>
           </div>
