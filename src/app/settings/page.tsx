@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -37,7 +38,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
   const { settings, updateSettings, loading: settingsLoading } = useUserSettings(user?.uid);
-  const { isMobile, openMobile, open } = useSidebar();
+  const { isMobile, openMobile, open, toggleSidebar } = useSidebar();
   const { toast } = useToast();
   
   const [selectedDays, setSelectedDays] = React.useState<number[]>([]);
@@ -45,6 +46,7 @@ export default function SettingsPage() {
 
   const isSidebarOpen = isMobile ? openMobile : open;
 
+  // Sincroniza dados iniciais
   React.useEffect(() => {
     if (!userLoading && !user) {
       router.push("/login");
@@ -57,12 +59,14 @@ export default function SettingsPage() {
     }
   }, [settings]);
 
+  // Detecta se houve mudanças comparando os arrays ordenados
   const hasChanges = React.useMemo(() => {
     const sortedCurrent = [...selectedDays].sort((a, b) => a - b);
     const sortedSaved = [...(settings?.meetingDays || [])].sort((a, b) => a - b);
     return JSON.stringify(sortedCurrent) !== JSON.stringify(sortedSaved);
   }, [selectedDays, settings]);
 
+  // Sincroniza estado dirty com a flag global para a Sidebar
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).__SETTINGS_DIRTY__ = hasChanges;
@@ -74,6 +78,7 @@ export default function SettingsPage() {
     };
   }, [hasChanges]);
 
+  // Trava de fechamento de aba/refresh do navegador
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasChanges) {
@@ -106,14 +111,19 @@ export default function SettingsPage() {
   };
 
   const handleToggleAttempt = (e: React.MouseEvent) => {
+    // Se o menu já estiver aberto, permite fechar normalmente
     if (isSidebarOpen) {
+      toggleSidebar();
       return;
     }
 
+    // Se houver mudanças, bloqueia a abertura do menu e mostra o alerta
     if (hasChanges) {
       e.preventDefault();
       e.stopPropagation();
       setShowExitConfirm(true);
+    } else {
+      toggleSidebar();
     }
   };
 
@@ -128,44 +138,46 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen pb-24 bg-background">
       <header className="fixed top-0 left-0 right-0 bg-white border-b z-[60] shadow-sm">
-        <div className="px-4 h-16 flex items-center justify-start gap-4">
-          <SidebarTrigger 
-            onClick={handleToggleAttempt}
-            className="text-primary hover:bg-primary/5"
-          >
-            <Menu className="h-6 w-6" />
-          </SidebarTrigger>
-          <div className="flex items-center gap-2">
-            <div className="relative h-8 w-8 overflow-hidden rounded-lg">
-              <Image 
-                src="/Ico.png" 
-                alt="Logo" 
-                fill 
-                sizes="32px"
-                className="object-cover"
-              />
+        <div className="px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <SidebarTrigger 
+              onClick={handleToggleAttempt}
+              className="text-primary hover:bg-primary/5"
+            >
+              <Menu className="h-6 w-6" />
+            </SidebarTrigger>
+            <div className="flex items-center gap-2">
+              <div className="relative h-8 w-8 overflow-hidden rounded-lg">
+                <Image 
+                  src="/Ico.png" 
+                  alt="Logo" 
+                  fill 
+                  sizes="32px"
+                  className="object-cover"
+                />
+              </div>
+              <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
+                Configurações
+              </h1>
             </div>
-            <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
-              Configurações
-            </h1>
           </div>
           <Button 
             onClick={handleSave} 
-            className={`gap-2 font-bold transition-all ml-auto ${hasChanges ? 'bg-primary shadow-lg scale-105' : 'bg-muted text-muted-foreground'}`}
+            className={`gap-2 font-bold transition-all ${hasChanges ? 'bg-primary shadow-lg scale-105' : 'bg-muted text-muted-foreground'}`}
             disabled={!hasChanges}
           >
             <Save className="h-4 w-4" />
-            Salvar
+            Salvar Alterações
           </Button>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pt-16">
+      <main className="max-w-3xl mx-auto px-4 pt-24">
         <div className="mt-8">
           {hasChanges && (
             <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
               <AlertTriangle className="h-5 w-5 shrink-0" />
-              <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar" antes de sair.</p>
+              <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar Alterações" antes de sair.</p>
             </div>
           )}
 
@@ -175,7 +187,7 @@ export default function SettingsPage() {
                 <Calendar className="h-6 w-6" /> Dias de Reunião
               </CardTitle>
               <CardDescription>
-                Selecione os dias da semana em que sua congregação realiza reuniões.
+                Selecione os dias da semana em que sua congregação realiza reuniões. O sistema usará isso para auditar se há lançamentos nestes dias.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -214,7 +226,7 @@ export default function SettingsPage() {
               Alterações não salvas
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Você fez alterações que ainda não foram salvas. Se sair agora, essas mudanças serão perdidas.
+              Você fez alterações nos dias de reunião que ainda não foram salvas. Se sair agora, essas mudanças serão perdidas. Deseja realmente sair?
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
