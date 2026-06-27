@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Chrome } from "lucide-center";
+import { Chrome } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -87,7 +87,7 @@ export default function LoginPage() {
                 type="email" 
                 placeholder="seu@email.com" 
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(setFormField("email", e.target.value))}
                 required 
                 autoComplete="email username"
               />
@@ -128,6 +128,7 @@ export default function LoginPage() {
             className="w-full py-6 font-medium gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary transition-colors"
             onClick={handleGoogleLogin}
           >
+            <Chrome className="h-5 w-5" />
             Entrar com Google
           </Button>
         </CardContent>
@@ -142,4 +143,8 @@ export default function LoginPage() {
       </Card>
     </div>
   );
+}
+
+function setFormField(field: string, value: string): string {
+  return value;
 }

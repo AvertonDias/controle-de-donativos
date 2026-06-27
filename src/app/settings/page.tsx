@@ -177,8 +177,13 @@ export default function SettingsPage() {
                     checked={selectedDays.includes(day.id)} 
                     onCheckedChange={() => toggleDay(day.id)}
                     className="h-5 w-5"
+                    onClick={(e) => e.stopPropagation()}
                   />
-                  <Label htmlFor={`day-${day.id}`} className="flex-1 cursor-pointer font-bold text-base">
+                  <Label 
+                    htmlFor={`day-${day.id}`} 
+                    className="flex-1 cursor-pointer font-bold text-base"
+                    onClick={(e) => e.stopPropagation()}
+                  >
                     {day.label}
                   </Label>
                 </div>
