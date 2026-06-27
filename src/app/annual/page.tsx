@@ -125,28 +125,30 @@ export default function AnnualSummaryPage() {
   return (
     <div className="min-h-screen pb-24 bg-background">
       <header className="fixed top-0 left-0 right-0 bg-white border-b z-[60] shadow-sm">
-        <div className="px-4 h-16 flex items-center justify-start gap-4">
-          <SidebarTrigger className="text-primary hover:bg-primary/5">
-            <Menu className="h-6 w-6" />
-          </SidebarTrigger>
-          <div className="flex items-center gap-2">
-            <div className="relative h-8 w-8 overflow-hidden rounded-lg">
-              <Image 
-                src="/Ico.png" 
-                alt="Logo" 
-                fill 
-                sizes="32px"
-                className="object-cover"
-              />
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="text-primary hover:bg-primary/5">
+              <Menu className="h-6 w-6" />
+            </SidebarTrigger>
+            <div className="flex items-center gap-2">
+              <div className="relative h-8 w-8 overflow-hidden rounded-lg">
+                <Image 
+                  src="/Ico.png" 
+                  alt="Logo" 
+                  fill 
+                  sizes="32px"
+                  className="object-cover"
+                />
+              </div>
+              <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
+                Resumo Anual
+              </h1>
             </div>
-            <h1 className="text-xl sm:text-2xl font-headline font-bold text-primary tracking-tight">
-              Resumo Anual
-            </h1>
           </div>
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 pt-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <main className="max-w-5xl mx-auto px-4 pt-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <div className="mt-8 flex items-center gap-2">
           <div className="flex items-center bg-white p-1 rounded-xl border shadow-sm">
             <Button 

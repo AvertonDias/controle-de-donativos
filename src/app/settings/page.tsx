@@ -63,7 +63,6 @@ export default function SettingsPage() {
     return JSON.stringify(sortedCurrent) !== JSON.stringify(sortedSaved);
   }, [selectedDays, settings]);
 
-  // Sincroniza o estado de "sujo" com a janela global para o menu lateral
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).__SETTINGS_DIRTY__ = hasChanges;
@@ -75,7 +74,6 @@ export default function SettingsPage() {
     };
   }, [hasChanges]);
 
-  // Trava de fechamento de aba/refresh do navegador
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasChanges) {
@@ -133,8 +131,8 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen pb-24 bg-background">
       <header className="fixed top-0 left-0 right-0 bg-white border-b z-[60] shadow-sm">
-        <div className="px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
             <SidebarTrigger 
               onClick={handleToggleAttempt}
               className="text-primary hover:bg-primary/5"
@@ -168,49 +166,47 @@ export default function SettingsPage() {
       </header>
 
       <main className="max-w-3xl mx-auto px-4 pt-24">
-        <div className="mt-8">
-          {hasChanges && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
-              <AlertTriangle className="h-5 w-5 shrink-0" />
-              <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar Alterações" antes de sair.</p>
-            </div>
-          )}
+        {hasChanges && (
+          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
+            <AlertTriangle className="h-5 w-5 shrink-0" />
+            <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar Alterações" antes de sair.</p>
+          </div>
+        )}
 
-          <Card className={hasChanges ? "border-amber-200 shadow-md" : ""}>
-            <CardHeader>
-              <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
-                <Calendar className="h-6 w-6" /> Dias de Reunião
-              </CardTitle>
-              <CardDescription>
-                Selecione os dias da semana em que sua congregação realiza reuniões. O sistema usará isso para auditar se há lançamentos nestes dias.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {DAYS_OF_WEEK.map((day) => (
-                  <div 
-                    key={day.id} 
-                    className={`flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDays.includes(day.id) ? 'bg-primary/5 border-primary/30 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`} 
-                    onClick={() => toggleDay(day.id)}
+        <Card className={hasChanges ? "border-amber-200 shadow-md" : ""}>
+          <CardHeader>
+            <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
+              <Calendar className="h-6 w-6" /> Dias de Reunião
+            </CardTitle>
+            <CardDescription>
+              Selecione os dias da semana em que sua congregação realiza reuniões. O sistema usará isso para auditar se há lançamentos nestes dias.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {DAYS_OF_WEEK.map((day) => (
+                <div 
+                  key={day.id} 
+                  className={`flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDays.includes(day.id) ? 'bg-primary/5 border-primary/30 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`} 
+                  onClick={() => toggleDay(day.id)}
+                >
+                  <Checkbox 
+                    id={`day-${day.id}`} 
+                    checked={selectedDays.includes(day.id)} 
+                    onCheckedChange={() => toggleDay(day.id)}
+                    className="h-5 w-5 pointer-events-none"
+                  />
+                  <Label 
+                    htmlFor={`day-${day.id}`} 
+                    className="flex-1 cursor-pointer font-bold text-base"
                   >
-                    <Checkbox 
-                      id={`day-${day.id}`} 
-                      checked={selectedDays.includes(day.id)} 
-                      onCheckedChange={() => toggleDay(day.id)}
-                      className="h-5 w-5 pointer-events-none"
-                    />
-                    <Label 
-                      htmlFor={`day-${day.id}`} 
-                      className="flex-1 cursor-pointer font-bold text-base"
-                    >
-                      {day.label}
-                    </Label>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+                    {day.label}
+                  </Label>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </main>
 
       <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>

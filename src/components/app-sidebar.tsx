@@ -124,7 +124,7 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar className="border-r border-primary/10 shadow-xl bg-white dark:bg-zinc-950 opacity-100">
-        <SidebarContent className="bg-white pt-10">
+        <SidebarContent className="bg-white pt-24">
           <SidebarGroup>
             <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
               Navegação Principal
