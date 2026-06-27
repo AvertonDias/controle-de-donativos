@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -41,10 +42,15 @@ export function InstallPwaPrompt() {
   }, []);
 
   useEffect(() => {
-    if (user && (deferredPrompt || isIos)) {
-      // Removida a verificação de sessionStorage para que apareça sempre ao abrir o app
+    // Verifica se já foi mostrado nesta sessão (aba aberta)
+    // sessionStorage é limpo quando o app/aba é fechado
+    const hasBeenShownThisSession = sessionStorage.getItem('pwa-prompt-shown-session');
+
+    if (user && (deferredPrompt || isIos) && !hasBeenShownThisSession) {
       const timer = setTimeout(() => {
         setIsOpen(true);
+        // Marca como mostrado na sessão atual para não repetir na navegação interna
+        sessionStorage.setItem('pwa-prompt-shown-session', 'true');
       }, 3000);
       return () => clearTimeout(timer);
     }
@@ -63,7 +69,6 @@ export function InstallPwaPrompt() {
   };
 
   const dismissPrompt = () => {
-    // Agora apenas fecha o estado local, sem salvar no sessionStorage
     setIsOpen(false);
   };
 
