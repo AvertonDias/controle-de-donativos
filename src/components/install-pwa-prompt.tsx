@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -28,7 +29,6 @@ export function InstallPwaPrompt() {
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      console.log('PWA: Evento beforeinstallprompt capturado');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);

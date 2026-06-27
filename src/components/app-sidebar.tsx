@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -52,6 +53,7 @@ export function AppSidebar() {
   const handleLogout = async () => {
     if (typeof window !== 'undefined' && (window as any).__SETTINGS_DIRTY__ && pathname === "/settings") {
       setPendingUrl("/login-after-logout");
+      setOpenMobile(false);
       setShowExitConfirm(true);
       return;
     }
@@ -69,6 +71,7 @@ export function AppSidebar() {
 
     if (typeof window !== 'undefined' && (window as any).__SETTINGS_DIRTY__ && pathname === "/settings") {
       setPendingUrl(url);
+      setOpenMobile(false);
       setShowExitConfirm(true);
       return;
     }
@@ -93,7 +96,6 @@ export function AppSidebar() {
 
     setPendingUrl(null);
     setShowExitConfirm(false);
-    setOpenMobile(false);
   };
 
   if (!user || pathname === "/login" || pathname === "/register" || pathname === "/forgot-password") {
@@ -120,7 +122,7 @@ export function AppSidebar() {
 
   return (
     <>
-      <Sidebar className="border-r border-primary/10 shadow-xl bg-white dark:bg-zinc-950 opacity-100">
+      <Sidebar className="border-r border-primary/10 shadow-xl bg-white opacity-100">
         <SidebarContent className="bg-white pt-16">
           <SidebarGroup>
             <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
