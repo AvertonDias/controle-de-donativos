@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -21,12 +20,14 @@ export function InstallPwaPrompt() {
   const { user } = useUser();
 
   useEffect(() => {
+    // Verifica se o app já está instalado
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone === true;
 
     if (isStandalone) return;
 
     const handleBeforeInstallPrompt = (e: any) => {
+      // Impede o banner padrão do navegador para mostrar o nosso customizado
       e.preventDefault();
       setDeferredPrompt(e);
     };
@@ -42,14 +43,13 @@ export function InstallPwaPrompt() {
   }, []);
 
   useEffect(() => {
-    // Verifica se já foi mostrado nesta sessão (aba aberta)
-    // sessionStorage é limpo quando o app/aba é fechado
+    // Lógica para mostrar o modal apenas uma vez por sessão (abertura do app)
     const hasBeenShownThisSession = sessionStorage.getItem('pwa-prompt-shown-session');
 
     if (user && (deferredPrompt || isIos) && !hasBeenShownThisSession) {
       const timer = setTimeout(() => {
         setIsOpen(true);
-        // Marca como mostrado na sessão atual para não repetir na navegação interna
+        // Marca como mostrado na sessão atual
         sessionStorage.setItem('pwa-prompt-shown-session', 'true');
       }, 3000);
       return () => clearTimeout(timer);
@@ -94,21 +94,22 @@ export function InstallPwaPrompt() {
                 fill 
                 sizes="96px"
                 className="object-cover"
+                priority
               />
             </div>
           </div>
-          <h2 className="text-2xl font-headline font-bold mb-1">Instalar Aplicativo</h2>
+          <h2 className="text-2xl font-headline font-bold mb-1 text-center">Instalar Aplicativo</h2>
           <p className="text-white/80 text-center text-sm font-medium">Controle de Donativos</p>
         </div>
 
         <div className="p-6">
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed text-center">
-            Instale para ter acesso rápido e uma experiência nativa no seu celular.
+            Instale para ter acesso rápido e uma experiência fluida como um aplicativo nativo.
           </p>
 
           {isIos ? (
             <div className="space-y-3 bg-blue-50 p-4 rounded-xl border border-blue-100">
-              <p className="font-bold text-xs text-blue-800 uppercase tracking-widest">Instruções para iOS:</p>
+              <p className="font-bold text-xs text-blue-800 uppercase tracking-widest">Instruções para iPhone/iPad:</p>
               <div className="flex items-start gap-3">
                 <div className="bg-white p-2 rounded-lg shadow-sm">
                   <Share className="h-4 w-4 text-blue-500" />
@@ -119,7 +120,7 @@ export function InstallPwaPrompt() {
                 <div className="bg-white p-2 rounded-lg shadow-sm">
                   <PlusSquare className="h-4 w-4 text-blue-500" />
                 </div>
-                <p className="text-xs text-blue-700">2. Escolha &quot;Adicionar à Tela de Início&quot;.</p>
+                <p className="text-xs text-blue-700">2. Escolha "Adicionar à Tela de Início".</p>
               </div>
             </div>
           ) : (
