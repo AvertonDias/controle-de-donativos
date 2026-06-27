@@ -20,6 +20,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface MonthlyTotal {
   month: string;
@@ -35,6 +41,16 @@ export default function AnnualSummaryPage() {
   const [year, setYear] = React.useState(new Date().getFullYear());
   const [data, setData] = React.useState<MonthlyTotal[]>([]);
   const [loading, setLoading] = React.useState(true);
+  const [isPopoverOpen, setIsPopoverOpen] = React.useState(false);
+
+  // Gera uma lista de anos para o seletor (ex: 2020 até 2030)
+  const availableYears = React.useMemo(() => {
+    const list = [];
+    for (let i = 2020; i <= 2030; i++) {
+      list.push(i);
+    }
+    return list;
+  }, []);
 
   React.useEffect(() => {
     if (!userLoading && !user) {
@@ -144,12 +160,40 @@ export default function AnnualSummaryPage() {
               <ChevronLeft className="h-4 w-4" />
             </Button>
             
-            <div className="px-4 flex items-center gap-2 h-9">
-              <Calendar className="h-4 w-4 text-primary" />
-              <span className="font-headline font-bold text-lg">
-                Ano de {year}
-              </span>
-            </div>
+            <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className="px-4 flex items-center gap-2 h-9 hover:bg-muted/50"
+                >
+                  <Calendar className="h-4 w-4 text-primary" />
+                  <span className="font-headline font-bold text-lg">
+                    Ano de {year}
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-48 p-2" align="center">
+                <div className="grid grid-cols-2 gap-1">
+                  {availableYears.map((y) => (
+                    <Button
+                      key={y}
+                      variant="ghost"
+                      size="sm"
+                      className={cn(
+                        "text-sm font-bold",
+                        year === y && "bg-primary text-white hover:bg-primary hover:text-white"
+                      )}
+                      onClick={() => {
+                        setYear(y);
+                        setIsPopoverOpen(false);
+                      }}
+                    >
+                      {y}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
 
             <Button 
               variant="ghost" 
