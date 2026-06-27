@@ -42,7 +42,7 @@ export function InstallPwaPrompt() {
   }, []);
 
   useEffect(() => {
-    if (user && deferredPrompt) {
+    if (user && (deferredPrompt || isIos)) {
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
       if (!wasDismissed) {
         const timer = setTimeout(() => {
@@ -51,7 +51,7 @@ export function InstallPwaPrompt() {
         return () => clearTimeout(timer);
       }
     }
-  }, [user, deferredPrompt]);
+  }, [user, deferredPrompt, isIos]);
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) return;
@@ -125,9 +125,10 @@ export function InstallPwaPrompt() {
               <Button 
                 onClick={handleInstallClick} 
                 className="w-full bg-primary hover:bg-accent py-6 text-lg font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
+                disabled={!deferredPrompt}
               >
                 <Download className="mr-2 h-5 w-5" />
-                Instalar Agora
+                {deferredPrompt ? "Instalar Agora" : "Aguardando sistema..."}
               </Button>
             </div>
           )}

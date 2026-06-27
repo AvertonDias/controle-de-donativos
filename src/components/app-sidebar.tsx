@@ -121,10 +121,10 @@ export function AppSidebar() {
   return (
     <>
       <Sidebar className="border-r border-primary/10 shadow-xl bg-white dark:bg-zinc-950 opacity-100">
-        <SidebarContent className="bg-white pt-16">
+        <SidebarContent className="bg-white pt-8">
           <SidebarGroup>
             <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
-              Navegação Principal
+              Navegação
             </SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu className="px-3">
@@ -180,7 +180,7 @@ export function AppSidebar() {
             >
               <div className="flex items-center gap-3">
                 <LogOut className="h-5 w-5" />
-                <span>Sair do sistema</span>
+                <span>Sair</span>
               </div>
               <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
             </button>
