@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -43,13 +42,11 @@ export function InstallPwaPrompt() {
 
   useEffect(() => {
     if (user && (deferredPrompt || isIos)) {
-      const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
-      if (!wasDismissed) {
-        const timer = setTimeout(() => {
-          setIsOpen(true);
-        }, 3000);
-        return () => clearTimeout(timer);
-      }
+      // Removida a verificação de sessionStorage para que apareça sempre ao abrir o app
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+      }, 3000);
+      return () => clearTimeout(timer);
     }
   }, [user, deferredPrompt, isIos]);
 
@@ -66,7 +63,7 @@ export function InstallPwaPrompt() {
   };
 
   const dismissPrompt = () => {
-    sessionStorage.setItem('pwa-modal-dismissed', 'true');
+    // Agora apenas fecha o estado local, sem salvar no sessionStorage
     setIsOpen(false);
   };
 
