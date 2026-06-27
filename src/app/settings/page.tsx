@@ -108,9 +108,8 @@ export default function SettingsPage() {
       e.preventDefault();
       e.stopPropagation();
       setShowExitConfirm(true);
-    } else {
-      toggleSidebar();
     }
+    // Se não houver alterações, não fazemos nada aqui e deixamos o SidebarTrigger original cuidar do toggleSidebar().
   };
 
   if (userLoading || settingsLoading) {
