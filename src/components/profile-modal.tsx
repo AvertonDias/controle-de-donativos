@@ -1,3 +1,4 @@
+
 'use client';
 
 import * as React from 'react';
@@ -30,6 +31,7 @@ export function ProfileModal({ user, open, onOpenChange }: ProfileModalProps) {
   const { toast } = useToast();
   const auth = useAuth();
 
+  // Atualiza o nome local quando o usuário do firebase mudar
   React.useEffect(() => {
     if (user.displayName) {
       setName(user.displayName);
@@ -41,10 +43,12 @@ export function ProfileModal({ user, open, onOpenChange }: ProfileModalProps) {
     setLoading(true);
 
     try {
+      // Atualizar nome se mudou
       if (name !== user.displayName) {
         await updateProfile(user, { displayName: name });
       }
 
+      // Atualizar senha se fornecida
       if (password) {
         if (password !== confirmPassword) {
           throw new Error('As senhas não coincidem');

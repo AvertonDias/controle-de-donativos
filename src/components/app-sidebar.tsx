@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -10,8 +11,8 @@ import {
   Settings, 
   LogOut, 
   ChevronRight,
-  User as UserIcon,
-  AlertTriangle
+  AlertTriangle,
+  User as UserIcon
 } from "lucide-react";
 import {
   Sidebar,
