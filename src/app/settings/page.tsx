@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -8,10 +9,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Settings, Menu, Calendar, Save } from "lucide-react";
+import { Menu, Calendar, Save, AlertTriangle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import Image from "next/image";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const DAYS_OF_WEEK = [
   { id: 0, label: "Domingo" },
@@ -27,9 +38,13 @@ export default function SettingsPage() {
   const router = useRouter();
   const { user, loading: userLoading } = useUser();
   const { settings, updateSettings, loading: settingsLoading } = useUserSettings(user?.uid);
+  const { toggleSidebar } = useSidebar();
   const { toast } = useToast();
+  
   const [selectedDays, setSelectedDays] = React.useState<number[]>([]);
+  const [showExitConfirm, setShowExitConfirm] = React.useState(false);
 
+  // Sincroniza dados iniciais
   React.useEffect(() => {
     if (!userLoading && !user) {
       router.push("/login");
@@ -41,6 +56,25 @@ export default function SettingsPage() {
       setSelectedDays(settings.meetingDays);
     }
   }, [settings]);
+
+  // Detecta se houve mudanças comparando os arrays ordenados
+  const hasChanges = React.useMemo(() => {
+    const sortedCurrent = [...selectedDays].sort((a, b) => a - b);
+    const sortedSaved = [...(settings?.meetingDays || [])].sort((a, b) => a - b);
+    return JSON.stringify(sortedCurrent) !== JSON.stringify(sortedSaved);
+  }, [selectedDays, settings]);
+
+  // Trava de fechamento de aba/refresh do navegador
+  React.useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasChanges) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasChanges]);
 
   const toggleDay = (dayId: number) => {
     setSelectedDays(prev => 
@@ -59,6 +93,16 @@ export default function SettingsPage() {
     router.push("/");
   };
 
+  const handleExitAttempt = (e: React.MouseEvent) => {
+    if (hasChanges) {
+      e.preventDefault();
+      e.stopPropagation();
+      setShowExitConfirm(true);
+    } else {
+      toggleSidebar();
+    }
+  };
+
   if (userLoading || settingsLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
@@ -72,9 +116,11 @@ export default function SettingsPage() {
       <header className="bg-white border-b sticky top-0 z-20 shadow-sm">
         <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <SidebarTrigger className="text-primary hover:bg-primary/5">
-              <Menu className="h-6 w-6" />
-            </SidebarTrigger>
+            <div onClickCapture={handleExitAttempt} className="inline-block">
+              <SidebarTrigger className="text-primary hover:bg-primary/5">
+                <Menu className="h-6 w-6" />
+              </SidebarTrigger>
+            </div>
             <div className="flex items-center gap-2">
               <div className="relative h-8 w-8 overflow-hidden rounded-lg">
                 <Image 
@@ -90,15 +136,26 @@ export default function SettingsPage() {
               </h1>
             </div>
           </div>
-          <Button onClick={handleSave} className="gap-2 bg-primary font-bold">
+          <Button 
+            onClick={handleSave} 
+            className={`gap-2 font-bold transition-all ${hasChanges ? 'bg-primary shadow-lg scale-105' : 'bg-muted text-muted-foreground'}`}
+            disabled={!hasChanges}
+          >
             <Save className="h-4 w-4" />
-            Salvar
+            Salvar Alterações
           </Button>
         </div>
       </header>
 
       <main className="max-w-3xl mx-auto px-4 pt-8">
-        <Card>
+        {hasChanges && (
+          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
+            <AlertTriangle className="h-5 w-5 shrink-0" />
+            <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar Alterações" antes de sair.</p>
+          </div>
+        )}
+
+        <Card className={hasChanges ? "border-amber-200 shadow-md" : ""}>
           <CardHeader>
             <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
               <Calendar className="h-6 w-6" /> Dias de Reunião
@@ -110,13 +167,18 @@ export default function SettingsPage() {
           <CardContent>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {DAYS_OF_WEEK.map((day) => (
-                <div key={day.id} className="flex items-center space-x-3 p-3 rounded-lg border hover:bg-muted/30 transition-colors cursor-pointer" onClick={() => toggleDay(day.id)}>
+                <div 
+                  key={day.id} 
+                  className={`flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDays.includes(day.id) ? 'bg-primary/5 border-primary/30 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`} 
+                  onClick={() => toggleDay(day.id)}
+                >
                   <Checkbox 
                     id={`day-${day.id}`} 
                     checked={selectedDays.includes(day.id)} 
                     onCheckedChange={() => toggleDay(day.id)}
+                    className="h-5 w-5"
                   />
-                  <Label htmlFor={`day-${day.id}`} className="flex-1 cursor-pointer font-medium">
+                  <Label htmlFor={`day-${day.id}`} className="flex-1 cursor-pointer font-bold text-base">
                     {day.label}
                   </Label>
                 </div>
@@ -125,6 +187,32 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
       </main>
+
+      <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              Alterações não salvas
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Você fez alterações nos dias de reunião. Se sair agora, essas mudanças serão perdidas. Deseja realmente sair?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Permanecer e Salvar</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={() => {
+                setShowExitConfirm(false);
+                toggleSidebar();
+              }}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Sair sem salvar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
