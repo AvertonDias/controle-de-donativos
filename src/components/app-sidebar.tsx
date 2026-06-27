@@ -1,3 +1,4 @@
+
 "use client";
 
 import * as React from "react";
@@ -10,7 +11,8 @@ import {
   Settings, 
   LogOut, 
   ChevronRight,
-  AlertTriangle
+  AlertTriangle,
+  User as UserIcon
 } from "lucide-react";
 import {
   Sidebar,
@@ -35,6 +37,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { ProfileModal } from "./profile-modal";
 
 export function AppSidebar() {
   const router = useRouter();
@@ -44,6 +47,7 @@ export function AppSidebar() {
   const { setOpenMobile } = useSidebar();
   
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
+  const [showProfileModal, setShowProfileModal] = React.useState(false);
   const [pendingUrl, setPendingUrl] = React.useState<string | null>(null);
 
   const handleLogout = async () => {
@@ -149,21 +153,26 @@ export function AppSidebar() {
 
         <SidebarFooter className="p-6 bg-white border-t">
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-2 rounded-xl border border-primary/5 bg-muted/30">
-              <Avatar className="h-10 w-10 border-2 border-white shadow-sm">
+            <div 
+              onClick={() => setShowProfileModal(true)}
+              className="flex items-center gap-3 p-2 rounded-xl border border-primary/5 bg-muted/30 cursor-pointer hover:bg-muted/50 transition-colors group/avatar"
+            >
+              <Avatar className="h-10 w-10 border-2 border-white shadow-sm transition-transform group-hover/avatar:scale-105">
                 <AvatarImage src={user.photoURL || ""} />
                 <AvatarFallback className="bg-primary/10 text-primary font-bold">
                   {user.displayName?.charAt(0) || user.email?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0 overflow-hidden">
-                <p className="text-sm font-bold text-primary truncate leading-none">
+                <p className="text-sm font-bold text-primary truncate leading-none mb-1">
                   {user.displayName || "Usuário"}
                 </p>
-                <p className="text-[10px] text-muted-foreground truncate">
-                  {user.email}
-                </p>
+                <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+                  <UserIcon className="h-2.5 w-2.5" />
+                  Perfil
+                </div>
               </div>
+              <ChevronRight className="h-4 w-4 text-muted-foreground opacity-30 group-hover/avatar:opacity-100 transition-opacity" />
             </div>
             
             <button 
@@ -179,6 +188,12 @@ export function AppSidebar() {
           </div>
         </SidebarFooter>
       </Sidebar>
+
+      <ProfileModal 
+        user={user} 
+        open={showProfileModal} 
+        onOpenChange={setShowProfileModal} 
+      />
 
       <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>
         <AlertDialogContent>
