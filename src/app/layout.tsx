@@ -5,6 +5,8 @@ import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from "@/components/ui/toaster";
 import { InstallPwaPrompt } from '@/components/install-pwa-prompt';
+import { SidebarProvider } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/app-sidebar';
 import Script from 'next/script';
 
 export const metadata: Metadata = {
@@ -41,7 +43,14 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased bg-background text-foreground">
         <FirebaseClientProvider>
-          {children}
+          <SidebarProvider>
+            <div className="flex min-h-screen w-full">
+              <AppSidebar />
+              <div className="flex-1 w-full overflow-x-hidden">
+                {children}
+              </div>
+            </div>
+          </SidebarProvider>
           <InstallPwaPrompt />
           <Toaster />
         </FirebaseClientProvider>

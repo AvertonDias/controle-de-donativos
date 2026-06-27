@@ -1,18 +1,17 @@
 
-const CACHE_NAME = 'donativos-cache-v1';
+const CACHE_NAME = 'donativos-v2';
 
 self.addEventListener('install', (event) => {
+  console.log('PWA: Service Worker instalando...');
   self.skipWaiting();
-  console.log('PWA: Service Worker instalado');
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(clients.claim());
   console.log('PWA: Service Worker ativado');
 });
 
-// O evento fetch é obrigatório para que o Chrome ofereça a instalação como "App"
+// O evento fetch é OBRIGATÓRIO para o Chrome permitir a instalação como APP
 self.addEventListener('fetch', (event) => {
-  // Apenas passa adiante, mas a existência do listener habilita o PWA
-  event.respondWith(fetch(event.request));
+  // Apenas responde para permitir que o navegador valide o PWA
+  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
 });

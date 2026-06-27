@@ -1,7 +1,7 @@
 {
   "id": "/",
   "name": "Controle de Donativos",
-  "short_name": "Donativos",
+  "short_name": "Donativos de Donativos",
   "description": "Gestão Financeira Consolidada para Congregações",
   "start_url": "/",
   "display": "standalone",

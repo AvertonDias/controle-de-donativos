@@ -44,12 +44,11 @@ export function InstallPwaPrompt() {
     };
   }, []);
 
-  // Abre o modal após o login se o prompt estiver disponível
+  // Abre o modal após o login
   useEffect(() => {
     if (user) {
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
       if (!wasDismissed) {
-        // Dá um tempo para o navegador processar o manifesto
         const timer = setTimeout(() => {
           setIsOpen(true);
         }, 3000);
@@ -61,6 +60,7 @@ export function InstallPwaPrompt() {
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
       console.log('PWA: Prompt de instalação ainda não disponível');
+      alert("Aguarde um momento enquanto o navegador prepara a instalação...");
       return;
     }
     
@@ -83,66 +83,71 @@ export function InstallPwaPrompt() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[425px] border-primary/20">
-        <DialogHeader>
-          <div className="flex items-center gap-4 mb-2">
-            <div className="relative h-14 w-14 overflow-hidden rounded-2xl shadow-lg border-2 border-primary/10 bg-white">
+      <DialogContent className="sm:max-w-[425px] border-primary/20 p-0 overflow-hidden rounded-2xl">
+        <div className="bg-primary p-8 flex flex-col items-center text-white relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
+          <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12" />
+          
+          <div className="relative h-24 w-24 overflow-hidden rounded-3xl shadow-2xl border-4 border-white/20 mb-4 bg-white p-2">
+            <div className="relative w-full h-full rounded-2xl overflow-hidden">
               <Image 
                 src="/Ico.png" 
                 alt="App Icon" 
                 fill 
-                sizes="56px"
+                sizes="96px"
                 className="object-cover"
               />
             </div>
-            <div>
-              <DialogTitle className="text-primary font-headline text-2xl">
-                Instalar App
-              </DialogTitle>
-              <DialogDescription className="text-sm font-medium">
-                Controle de Donativos
-              </DialogDescription>
-            </div>
           </div>
-          <p className="pt-2 text-base text-foreground/80 leading-relaxed">
-            Tenha uma experiência melhor instalando o aplicativo oficial na sua tela de início.
-          </p>
-        </DialogHeader>
+          <h2 className="text-2xl font-headline font-bold mb-1">Instalar App Real</h2>
+          <p className="text-white/80 text-center text-sm font-medium">Controle de Donativos</p>
+        </div>
 
-        {isIos ? (
-          <div className="space-y-4 py-4 text-sm text-muted-foreground border-y border-dashed my-2">
-            <p className="font-semibold text-foreground">Instruções para iPhone:</p>
-            <ol className="list-decimal list-inside space-y-3">
-              <li>Toque no ícone de compartilhar <Share className="h-4 w-4 inline text-blue-500 mx-1" />.</li>
-              <li>Role e toque em <strong>"Adicionar à Tela de Início"</strong> <PlusSquare className="h-4 w-4 inline mx-1" />.</li>
-            </ol>
-          </div>
-        ) : (
-          <div className="py-6 text-center space-y-4 bg-muted/30 rounded-lg my-2">
-            <div className="flex justify-center">
-              <div className="bg-primary/10 p-4 rounded-full">
-                <Download className="h-8 w-8 text-primary animate-bounce" />
+        <div className="p-6">
+          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+            Obtenha a melhor experiência instalando o aplicativo oficial diretamente no seu dispositivo.
+          </p>
+
+          {isIos ? (
+            <div className="space-y-3 bg-blue-50 p-4 rounded-xl border border-blue-100">
+              <p className="font-bold text-xs text-blue-800 uppercase tracking-widest">Instruções para iOS:</p>
+              <div className="flex items-start gap-3">
+                <div className="bg-white p-2 rounded-lg shadow-sm">
+                  <Share className="h-4 w-4 text-blue-500" />
+                </div>
+                <p className="text-xs text-blue-700">1. Toque no ícone de compartilhar na barra inferior do Safari.</p>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="bg-white p-2 rounded-lg shadow-sm">
+                  <PlusSquare className="h-4 w-4 text-blue-500" />
+                </div>
+                <p className="text-xs text-blue-700">2. Escolha &quot;Adicionar à Tela de Início&quot;.</p>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground px-4">
-              Isso instalará o aplicativo real no seu dispositivo Android.
-            </p>
-          </div>
-        )}
-
-        <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
-          {!isIos && (
-            <Button 
-              onClick={handleInstallClick} 
-              className="w-full bg-primary hover:bg-accent py-6 text-lg font-bold shadow-md"
-            >
-              Instalar Agora
-            </Button>
+          ) : (
+            <div className="space-y-4">
+              <Button 
+                onClick={handleInstallClick} 
+                className="w-full bg-primary hover:bg-accent py-6 text-lg font-bold shadow-lg shadow-primary/20 transition-all active:scale-95"
+              >
+                <Download className="mr-2 h-5 w-5" />
+                Instalar Agora
+              </Button>
+              <p className="text-[10px] text-center text-muted-foreground uppercase font-bold tracking-tighter">
+                Rápido • Gratuito • Sem ocupar espaço
+              </p>
+            </div>
           )}
-          <Button variant="ghost" onClick={dismissPrompt} className="w-full text-muted-foreground hover:text-primary">
-            Depois eu instalo
-          </Button>
-        </DialogFooter>
+
+          <div className="mt-6 flex justify-center">
+            <button 
+              onClick={dismissPrompt} 
+              className="text-sm font-bold text-muted-foreground hover:text-primary transition-colors"
+            >
+              Depois eu instalo
+            </button>
+          </div>
+        </div>
       </DialogContent>
     </Dialog>
   );
