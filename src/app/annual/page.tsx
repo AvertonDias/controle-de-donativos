@@ -142,8 +142,8 @@ export default function AnnualSummaryPage() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 pt-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+      <main className="max-w-5xl mx-auto px-4 pt-16">
+        <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <Card className="border-none shadow-sm bg-blue-50">
             <CardHeader className="pb-2">
               <CardTitle className="text-xs font-bold text-blue-600 uppercase tracking-widest flex items-center gap-2">

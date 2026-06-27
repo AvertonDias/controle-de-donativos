@@ -43,7 +43,6 @@ export default function SettingsPage() {
   const [selectedDays, setSelectedDays] = React.useState<number[]>([]);
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
 
-  // Sincroniza dados iniciais
   React.useEffect(() => {
     if (!userLoading && !user) {
       router.push("/login");
@@ -56,14 +55,12 @@ export default function SettingsPage() {
     }
   }, [settings]);
 
-  // Detecta se houve mudanças comparando os arrays ordenados
   const hasChanges = React.useMemo(() => {
     const sortedCurrent = [...selectedDays].sort((a, b) => a - b);
     const sortedSaved = [...(settings?.meetingDays || [])].sort((a, b) => a - b);
     return JSON.stringify(sortedCurrent) !== JSON.stringify(sortedSaved);
   }, [selectedDays, settings]);
 
-  // Sincroniza o estado de "sujo" com a janela global para o menu lateral
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       (window as any).__SETTINGS_DIRTY__ = hasChanges;
@@ -75,7 +72,6 @@ export default function SettingsPage() {
     };
   }, [hasChanges]);
 
-  // Trava de fechamento de aba/refresh do navegador
   React.useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasChanges) {
@@ -161,50 +157,52 @@ export default function SettingsPage() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 pt-24">
-        {hasChanges && (
-          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
-            <AlertTriangle className="h-5 w-5 shrink-0" />
-            <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar Alterações" antes de sair.</p>
-          </div>
-        )}
-
-        <Card className={hasChanges ? "border-amber-200 shadow-md" : ""}>
-          <CardHeader>
-            <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
-              <Calendar className="h-6 w-6" /> Dias de Reunião
-            </CardTitle>
-            <CardDescription>
-              Selecione os dias da semana em que sua congregação realiza reuniões. O sistema usará isso para auditar se há lançamentos nestes dias.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {DAYS_OF_WEEK.map((day) => (
-                <div 
-                  key={day.id} 
-                  className={`flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDays.includes(day.id) ? 'bg-primary/5 border-primary/30 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`} 
-                  onClick={() => toggleDay(day.id)}
-                >
-                  <Checkbox 
-                    id={`day-${day.id}`} 
-                    checked={selectedDays.includes(day.id)} 
-                    onCheckedChange={() => toggleDay(day.id)}
-                    className="h-5 w-5"
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  <Label 
-                    htmlFor={`day-${day.id}`} 
-                    className="flex-1 cursor-pointer font-bold text-base"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {day.label}
-                  </Label>
-                </div>
-              ))}
+      <main className="max-w-3xl mx-auto px-4 pt-16">
+        <div className="mt-8">
+          {hasChanges && (
+            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-2">
+              <AlertTriangle className="h-5 w-5 shrink-0" />
+              <p className="text-sm font-medium">Você tem alterações não salvas. Clique em "Salvar Alterações" antes de sair.</p>
             </div>
-          </CardContent>
-        </Card>
+          )}
+
+          <Card className={hasChanges ? "border-amber-200 shadow-md" : ""}>
+            <CardHeader>
+              <CardTitle className="font-headline text-2xl text-primary flex items-center gap-2">
+                <Calendar className="h-6 w-6" /> Dias de Reunião
+              </CardTitle>
+              <CardDescription>
+                Selecione os dias da semana em que sua congregação realiza reuniões. O sistema usará isso para auditar se há lançamentos nestes dias.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {DAYS_OF_WEEK.map((day) => (
+                  <div 
+                    key={day.id} 
+                    className={`flex items-center space-x-3 p-4 rounded-xl border transition-all cursor-pointer ${selectedDays.includes(day.id) ? 'bg-primary/5 border-primary/30 ring-1 ring-primary/20' : 'hover:bg-muted/30'}`} 
+                    onClick={() => toggleDay(day.id)}
+                  >
+                    <Checkbox 
+                      id={`day-${day.id}`} 
+                      checked={selectedDays.includes(day.id)} 
+                      onCheckedChange={() => toggleDay(day.id)}
+                      className="h-5 w-5"
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                    <Label 
+                      htmlFor={`day-${day.id}`} 
+                      className="flex-1 cursor-pointer font-bold text-base"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {day.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </main>
 
       <AlertDialog open={showExitConfirm} onOpenChange={setShowExitConfirm}>

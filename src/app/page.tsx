@@ -79,8 +79,8 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="max-w-5xl mx-auto px-4 pt-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
+      <main className="max-w-5xl mx-auto px-4 pt-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="mt-8 flex flex-col md:flex-row md:items-start justify-between gap-4">
           <MonthSelector currentDate={selectedMonth} onChange={setSelectedMonth} />
         </div>
 
