@@ -3,7 +3,7 @@ import type { MetadataRoute } from 'next';
 export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'Controle de Donativos',
-    short_name: 'Donativos',
+    short_name: 'Controle de Donativos',
     description: 'Gestão Financeira Consolidada para Congregações',
     start_url: '/',
     id: 'controle-donativos-pwa',
