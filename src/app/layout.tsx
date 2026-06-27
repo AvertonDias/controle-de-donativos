@@ -9,6 +9,7 @@ import Script from 'next/script';
 export const metadata: Metadata = {
   title: 'Controle de Donativos',
   description: 'Gestão Financeira Consolidada para Congregações',
+  manifest: '/manifest.json',
   icons: {
     icon: [
       { url: '/Ico.png' },
@@ -24,15 +25,11 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
-  params: paramsPromise,
 }: {
   children: React.ReactNode;
-  params: Promise<any>;
 }) {
-  await paramsPromise;
-
   return (
     <html lang="pt-BR">
       <head>
@@ -41,6 +38,7 @@ export default async function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="theme-color" content="#4A3AFF" />
+        {/* O crossOrigin é vital para evitar erros de CORS no manifesto em ambientes de dev */}
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
@@ -54,9 +52,9 @@ export default async function RootLayout({
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
                 navigator.serviceWorker.register('/sw.js').then(function(reg) {
-                  console.log('PWA Service Worker ativo');
+                  console.log('PWA Service Worker registrado com sucesso');
                 }).catch(function(err) {
-                  console.log('Falha no SW:', err);
+                  console.log('Falha ao registrar Service Worker:', err);
                 });
               });
             }

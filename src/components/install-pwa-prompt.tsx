@@ -21,14 +21,12 @@ export function InstallPwaPrompt() {
   const { user, loading } = useUser();
 
   useEffect(() => {
-    // Detectar se já é standalone
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone === true;
 
     if (isStandalone) return;
 
     const handleBeforeInstallPrompt = (e: any) => {
-      console.log('Evento beforeinstallprompt disparado');
       e.preventDefault();
       setDeferredPrompt(e);
       
@@ -40,7 +38,6 @@ export function InstallPwaPrompt() {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-    // Detectar iOS
     const userAgent = window.navigator.userAgent.toLowerCase();
     setIsIos(/iphone|ipad|ipod/.test(userAgent));
 
@@ -49,30 +46,11 @@ export function InstallPwaPrompt() {
     };
   }, [user]);
 
-  // Mostrar modal após o login caso o evento já tenha disparado
-  useEffect(() => {
-    if (!loading && user) {
-      const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
-        || (window.navigator as any).standalone === true;
-      
-      if (isStandalone) return;
-
-      const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
-      if (!wasDismissed && deferredPrompt) {
-        setIsOpen(true);
-      }
-    }
-  }, [user, loading, deferredPrompt]);
-
   const handleInstallClick = async () => {
-    if (!deferredPrompt) {
-      console.log('Ainda não há sinal do navegador para instalação.');
-      return;
-    }
+    if (!deferredPrompt) return;
     
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log('Decisão de instalação:', outcome);
     
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
@@ -109,7 +87,7 @@ export function InstallPwaPrompt() {
             </div>
           </div>
           <p className="pt-2 text-base text-foreground/80 leading-relaxed">
-            Tenha uma experiência muito melhor instalando o aplicativo oficial na sua tela de início.
+            Tenha uma experiência melhor instalando o aplicativo na sua tela de início.
           </p>
         </DialogHeader>
 
@@ -129,7 +107,7 @@ export function InstallPwaPrompt() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground px-4">
-              Isso instalará o aplicativo real no seu dispositivo, com acesso rápido e sem barras do navegador.
+              Isso instalará o aplicativo real no seu dispositivo.
             </p>
           </div>
         )}
@@ -141,7 +119,7 @@ export function InstallPwaPrompt() {
               className="w-full bg-primary hover:bg-accent py-6 text-lg font-bold shadow-md"
               disabled={!deferredPrompt}
             >
-              {deferredPrompt ? 'Instalar Agora' : 'Preparando...'}
+              {deferredPrompt ? 'Instalar Agora' : 'Aguarde...'}
             </Button>
           )}
           <Button variant="ghost" onClick={dismissPrompt} className="w-full text-muted-foreground hover:text-primary">

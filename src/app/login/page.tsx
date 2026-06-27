@@ -49,15 +49,6 @@ export default function LoginPage() {
       router.push("/");
     } catch (error: any) {
       let errorMessage = "Não foi possível entrar com sua conta Google.";
-      
-      if (error.code === 'auth/operation-not-allowed') {
-        errorMessage = "O login com Google não está ativado no Firebase Console.";
-      } else if (error.code === 'auth/unauthorized-domain') {
-        errorMessage = "Este domínio não está autorizado no Firebase Console.";
-      } else if (error.code === 'auth/popup-blocked') {
-        errorMessage = "O popup de login foi bloqueado pelo seu navegador.";
-      }
-
       toast({
         variant: "destructive",
         title: "Erro com Google",
@@ -134,7 +125,7 @@ export default function LoginPage() {
           </div>
           <Button 
             variant="outline" 
-            className="w-full py-6 font-medium gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary focus:text-primary transition-colors"
+            className="w-full py-6 font-medium gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary transition-colors"
             onClick={handleGoogleLogin}
           >
             <Chrome className="h-5 w-5 text-primary" />
