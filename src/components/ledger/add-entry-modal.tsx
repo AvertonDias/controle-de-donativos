@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,11 +22,26 @@ interface AddEntryModalProps {
 export function AddEntryModal({ onAdd }: AddEntryModalProps) {
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    date: new Date().toISOString().split('T')[0],
+    date: '',
     worldwideWork: '',
     congregation: '',
     observations: '',
   });
+
+  // Define a data padrão como "hoje" no fuso de Brasília ao montar o componente
+  useEffect(() => {
+    const getBrasiliaDate = () => {
+      const now = new Date();
+      return new Intl.DateTimeFormat('fr-CA', {
+        timeZone: 'America/Sao_Paulo',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).format(now);
+    };
+    
+    setFormData(prev => ({ ...prev, date: getBrasiliaDate() }));
+  }, [open]); // Atualiza sempre que o modal abre para garantir que a data esteja correta se passar da meia-noite
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +51,18 @@ export function AddEntryModal({ onAdd }: AddEntryModalProps) {
       congregation: parseFloat(formData.congregation) || 0,
       observations: formData.observations,
     });
+    
+    // Resetar campos mantendo a data de hoje
+    const now = new Date();
+    const today = new Intl.DateTimeFormat('fr-CA', {
+      timeZone: 'America/Sao_Paulo',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(now);
+
     setFormData({
-      date: new Date().toISOString().split('T')[0],
+      date: today,
       worldwideWork: '',
       congregation: '',
       observations: '',
