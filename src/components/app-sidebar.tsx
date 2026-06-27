@@ -10,8 +10,8 @@ import {
   Settings, 
   LogOut, 
   ChevronRight,
-  AlertTriangle,
-  User as UserIcon
+  User as UserIcon,
+  AlertTriangle
 } from "lucide-react";
 import {
   Sidebar,

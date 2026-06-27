@@ -20,7 +20,6 @@ export function InstallPwaPrompt() {
   const { user } = useUser();
 
   useEffect(() => {
-    // Detecta se já está instalado
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone === true;
 
@@ -42,7 +41,6 @@ export function InstallPwaPrompt() {
     };
   }, []);
 
-  // Abre o modal após o login se o prompt estiver disponível
   useEffect(() => {
     if (user && (deferredPrompt || isIos)) {
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
@@ -58,6 +56,7 @@ export function InstallPwaPrompt() {
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
       console.log('PWA: Prompt de instalação ainda não disponível');
+      alert("Aguarde um momento enquanto o navegador prepara a instalação...");
       return;
     }
     
@@ -80,7 +79,7 @@ export function InstallPwaPrompt() {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-[425px] border-primary/20 p-0 overflow-hidden rounded-2xl">
+      <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden rounded-2xl">
         <DialogHeader className="sr-only">
           <DialogTitle>Instalar Controle de Donativos</DialogTitle>
           <DialogDescription>
