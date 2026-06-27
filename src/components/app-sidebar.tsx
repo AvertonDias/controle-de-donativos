@@ -37,14 +37,13 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { ProfileModal } from "./profile-modal";
-import Image from "next/image";
 
 export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const auth = useAuth();
   const { user } = useUser();
-  const { setOpenMobile, isMobile } = useSidebar();
+  const { setOpenMobile } = useSidebar();
   
   const [showExitConfirm, setShowExitConfirm] = React.useState(false);
   const [showProfileModal, setShowProfileModal] = React.useState(false);
@@ -123,19 +122,6 @@ export function AppSidebar() {
     <>
       <Sidebar className="border-r border-primary/10 shadow-xl bg-white dark:bg-zinc-950 opacity-100">
         <SidebarContent className="bg-white pt-16">
-          {isMobile && (
-            <div className="flex items-center gap-3 px-6 py-4 border-b mb-2">
-              <div className="relative h-6 w-6 overflow-hidden rounded shadow-sm">
-                <Image 
-                  src="/Ico.png" 
-                  alt="Logo" 
-                  fill 
-                  className="object-cover"
-                />
-              </div>
-              <span className="font-headline font-bold text-primary tracking-tight">Donativos</span>
-            </div>
-          )}
           <SidebarGroup>
             <SidebarGroupLabel className="px-6 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/60 mb-2">
               Navegação Principal
