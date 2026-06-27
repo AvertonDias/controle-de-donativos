@@ -10,7 +10,6 @@ import {
   TrendingUp, 
   Settings, 
   LogOut, 
-  Heart,
   Calendar,
   ChevronRight
 } from "lucide-react";
@@ -74,6 +73,7 @@ export function AppSidebar() {
               alt="Logo" 
               fill 
               sizes="40px"
+              priority
               className="object-cover"
             />
           </div>
@@ -123,7 +123,7 @@ export function AppSidebar() {
                 <span className="text-xs font-bold">{new Date().getFullYear()}</span>
               </div>
               <p className="text-[10px] text-blue-800/70 font-medium italic">
-                Acompanhe o crescimento das suas contribuições anualmente.
+                Acompanhe o crescimento das suas contribuições anualmente através do Resumo Anual.
               </p>
             </div>
           </SidebarGroupContent>

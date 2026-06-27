@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Share, PlusSquare, Download } from "lucide-react";
@@ -60,7 +59,7 @@ export function InstallPwaPrompt() {
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
       console.log('PWA: Prompt de instalação ainda não disponível');
-      alert("Aguarde um momento enquanto o navegador prepara a instalação...");
+      alert("O navegador ainda está validando o aplicativo. Por favor, aguarde alguns segundos e tente novamente.");
       return;
     }
     
@@ -84,6 +83,13 @@ export function InstallPwaPrompt() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px] border-primary/20 p-0 overflow-hidden rounded-2xl">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Instalar Controle de Donativos</DialogTitle>
+          <DialogDescription>
+            Instale o aplicativo oficial para ter acesso rápido e uma experiência nativa.
+          </DialogDescription>
+        </DialogHeader>
+        
         <div className="bg-primary p-8 flex flex-col items-center text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16" />
           <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full -ml-12 -mb-12" />
@@ -104,7 +110,7 @@ export function InstallPwaPrompt() {
         </div>
 
         <div className="p-6">
-          <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+          <p className="text-sm text-muted-foreground mb-6 leading-relaxed text-center">
             Obtenha a melhor experiência instalando o aplicativo oficial diretamente no seu dispositivo.
           </p>
 
@@ -133,8 +139,8 @@ export function InstallPwaPrompt() {
                 <Download className="mr-2 h-5 w-5" />
                 Instalar Agora
               </Button>
-              <p className="text-[10px] text-center text-muted-foreground uppercase font-bold tracking-tighter">
-                Rápido • Gratuito • Sem ocupar espaço
+              <p className="text-[10px] text-center text-muted-foreground uppercase font-bold tracking-widest">
+                Rápido • Seguro • Gratuito
               </p>
             </div>
           )}
