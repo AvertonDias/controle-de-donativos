@@ -20,6 +20,7 @@ export function InstallPwaPrompt() {
   const { user } = useUser();
 
   useEffect(() => {
+    // Detecta se já está instalado
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone === true;
 
@@ -28,7 +29,7 @@ export function InstallPwaPrompt() {
     const handleBeforeInstallPrompt = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      console.log('PWA: Evento beforeinstallprompt capturado');
+      console.log('PWA: Evento de instalação capturado');
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -41,6 +42,7 @@ export function InstallPwaPrompt() {
     };
   }, []);
 
+  // Lógica para abrir o modal automaticamente após o login
   useEffect(() => {
     if (user && (deferredPrompt || isIos)) {
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
