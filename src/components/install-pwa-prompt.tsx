@@ -21,7 +21,6 @@ export function InstallPwaPrompt() {
   const { user } = useUser();
 
   useEffect(() => {
-    // Detecta se já está instalado
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone === true;
 
@@ -43,7 +42,6 @@ export function InstallPwaPrompt() {
     };
   }, []);
 
-  // Abre o modal após o login
   useEffect(() => {
     if (user) {
       const wasDismissed = sessionStorage.getItem('pwa-modal-dismissed');
@@ -58,8 +56,7 @@ export function InstallPwaPrompt() {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      console.log('PWA: Prompt de instalação ainda não disponível');
-      alert("O navegador ainda está validando o aplicativo. Por favor, aguarde alguns segundos e tente novamente.");
+      alert("O navegador ainda está preparando o ambiente. Por favor, tente novamente em alguns segundos.");
       return;
     }
     
@@ -67,11 +64,8 @@ export function InstallPwaPrompt() {
     const { outcome } = await deferredPrompt.userChoice;
     
     if (outcome === 'accepted') {
-      console.log('PWA: Usuário aceitou a instalação');
       setDeferredPrompt(null);
       setIsOpen(false);
-    } else {
-      console.log('PWA: Usuário recusou a instalação');
     }
   };
 
@@ -86,7 +80,7 @@ export function InstallPwaPrompt() {
         <DialogHeader className="sr-only">
           <DialogTitle>Instalar Controle de Donativos</DialogTitle>
           <DialogDescription>
-            Instale o aplicativo oficial para ter acesso rápido e uma experiência nativa.
+            Obtenha a melhor experiência instalando o aplicativo oficial diretamente no seu dispositivo.
           </DialogDescription>
         </DialogHeader>
         
@@ -105,13 +99,13 @@ export function InstallPwaPrompt() {
               />
             </div>
           </div>
-          <h2 className="text-2xl font-headline font-bold mb-1">Instalar App Real</h2>
+          <h2 className="text-2xl font-headline font-bold mb-1">Instalar Aplicativo</h2>
           <p className="text-white/80 text-center text-sm font-medium">Controle de Donativos</p>
         </div>
 
         <div className="p-6">
           <p className="text-sm text-muted-foreground mb-6 leading-relaxed text-center">
-            Obtenha a melhor experiência instalando o aplicativo oficial diretamente no seu dispositivo.
+            Instale para ter acesso rápido e uma experiência nativa no seu celular.
           </p>
 
           {isIos ? (
@@ -139,9 +133,6 @@ export function InstallPwaPrompt() {
                 <Download className="mr-2 h-5 w-5" />
                 Instalar Agora
               </Button>
-              <p className="text-[10px] text-center text-muted-foreground uppercase font-bold tracking-widest">
-                Rápido • Seguro • Gratuito
-              </p>
             </div>
           )}
 

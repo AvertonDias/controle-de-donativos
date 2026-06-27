@@ -1,17 +1,25 @@
 
-const CACHE_NAME = 'donativos-v2';
+/**
+ * Service Worker PWA
+ * Essencial para habilitar a instalação como "Aplicativo" no Android/Chrome.
+ */
+
+const CACHE_NAME = 'donativos-v1';
 
 self.addEventListener('install', (event) => {
-  console.log('PWA: Service Worker instalando...');
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  console.log('PWA: Service Worker ativado');
+  event.waitUntil(clients.claim());
 });
 
-// O evento fetch é OBRIGATÓRIO para o Chrome permitir a instalação como APP
+// O evento fetch é OBRIGATÓRIO para o Chrome oferecer a instalação como App
 self.addEventListener('fetch', (event) => {
-  // Apenas responde para permitir que o navegador valide o PWA
-  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+  // Estratégia de rede primeiro para evitar dados desatualizados no Firebase
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    })
+  );
 });

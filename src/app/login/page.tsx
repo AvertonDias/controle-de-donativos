@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Chrome } from "lucide-react";
+import { Chrome } from "lucide-center";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -128,7 +128,6 @@ export default function LoginPage() {
             className="w-full py-6 font-medium gap-2 border-primary/20 hover:bg-primary/5 hover:text-primary transition-colors"
             onClick={handleGoogleLogin}
           >
-            <Chrome className="h-5 w-5 text-primary" />
             Entrar com Google
           </Button>
         </CardContent>
