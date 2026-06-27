@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -28,9 +27,8 @@ export function InstallPwaPrompt() {
 
     if (isStandalone) return;
 
-    // Escutar o evento de instalação (Android/Chrome)
     const handleBeforeInstallPrompt = (e: any) => {
-      console.log('Evento beforeinstallprompt capturado');
+      console.log('Evento beforeinstallprompt disparado');
       e.preventDefault();
       setDeferredPrompt(e);
       
@@ -68,13 +66,13 @@ export function InstallPwaPrompt() {
 
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
-      alert("O navegador ainda está validando o aplicativo. Por favor, aguarde alguns segundos ou tente recarregar a página.");
+      console.log('Ainda não há sinal do navegador para instalação.');
       return;
     }
     
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log('Escolha do usuário:', outcome);
+    console.log('Decisão de instalação:', outcome);
     
     if (outcome === 'accepted') {
       setDeferredPrompt(null);
@@ -131,15 +129,19 @@ export function InstallPwaPrompt() {
               </div>
             </div>
             <p className="text-sm text-muted-foreground px-4">
-              Isso criará o aplicativo real no seu dispositivo, com acesso rápido e sem barras do navegador.
+              Isso instalará o aplicativo real no seu dispositivo, com acesso rápido e sem barras do navegador.
             </p>
           </div>
         )}
 
         <DialogFooter className="flex flex-col sm:flex-row gap-2 mt-4">
           {!isIos && (
-            <Button onClick={handleInstallClick} className="w-full bg-primary hover:bg-accent py-6 text-lg font-bold shadow-md">
-              Instalar Agora
+            <Button 
+              onClick={handleInstallClick} 
+              className="w-full bg-primary hover:bg-accent py-6 text-lg font-bold shadow-md"
+              disabled={!deferredPrompt}
+            >
+              {deferredPrompt ? 'Instalar Agora' : 'Preparando...'}
             </Button>
           )}
           <Button variant="ghost" onClick={dismissPrompt} className="w-full text-muted-foreground hover:text-primary">

@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import type {Metadata} from 'next';
 import './globals.css';
@@ -43,7 +42,7 @@ export default async function RootLayout({
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="theme-color" content="#4A3AFF" />
-        {/* Atributo crossOrigin é essencial para evitar erro de CORS no ambiente de dev */}
+        {/* crossOrigin é vital para o manifesto funcionar no ambiente de dev */}
         <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
       </head>
       <body className="font-body antialiased bg-background text-foreground">
@@ -56,10 +55,10 @@ export default async function RootLayout({
           {`
             if ('serviceWorker' in navigator) {
               window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/sw.js', { scope: '/' }).then(function(reg) {
-                  console.log('PWA Service Worker registrado com sucesso:', reg.scope);
+                navigator.serviceWorker.register('/sw.js').then(function(reg) {
+                  console.log('PWA Service Worker ativo');
                 }).catch(function(err) {
-                  console.log('Falha ao registrar Service Worker:', err);
+                  console.log('Falha no SW:', err);
                 });
               });
             }
