@@ -44,7 +44,7 @@ export function AddEntryModal({ onAdd }: AddEntryModalProps) {
     if (open) {
       setFormData(prev => ({ ...prev, date: getBrasiliaDate() }));
     }
-  }, [open]); // Atualiza sempre que o modal abre para garantir que a data esteja correta se passar da meia-noite
+  }, [open]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
